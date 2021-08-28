@@ -1,8 +1,7 @@
----
-title: "Linear Transformation Matrix Correspondence"
-date: 2018-01-01T13:37:00-08:00
-draft: false
----
+
+# Linear Transformation Matrix Correspondence
+
+Written 2018-01-01T13:37:00-08:00,
 
 Linear algebra uses operations on scalars, vectors and matrices to "algebraize" the theory of linear transformations. So every concept, property or relation in the study of matrices should correspond to concept, property or relation in the theory of linear transformations. I made a table to keep track of these correspondences (there are some gaps).
 
