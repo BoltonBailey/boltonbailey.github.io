@@ -9,4 +9,7 @@ I also don't always remember when I first started writing something, so some dat
 
 Also, some of my ideas are just bad. Don't intentionally crash satellites into each other because I told you to.
 
-TODO: Generate list
+Here are some posts, more to come later
+
+* [Kessler Mitigation Through Ley Lines](./kessler-mitigation-through-ley-lines/index.html)
+* [Minimum Spanning Tree of the Galaxy](./minimum-spanning-tree-of-the-galaxy/index.html)
