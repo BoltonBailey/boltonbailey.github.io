@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Bayesian Elo Analysis</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Bayesian Elo Analysis</h1>
+<p class="date">2019-01-01T13:37:00-08:00</p>
+</header>
+<p>The Elo system, used for ranking performance in chess and other games, boils down to an elegant (though not necessarily correct) <a href="https://en.wikipedia.org/wiki/Elo_rating_system#Theory">set of assumptions</a> about the nature of player strength:</p>
+<ol type="1">
+<li>A player’s <em>strength</em> can be modeled by a single number, called their Elo Rating.</li>
+<li>A pair of player’s <em>relative overperformance</em> in a specific game is assumed to be i.i.d. logistically distributed for all games, (with parameter <span class="math inline"><em>k</em></span> set in chess to <span class="math inline">400ln 10</span>).</li>
+<li>In a game, the higher rated player wins if the relative overperformance is greater than the difference in the ratings.</li>
+</ol>
+<p>This results in a win probability of <br /><span class="math display">$$\frac{1}{1+e^{k(R_2 - R_1)}}$$</span><br /> for a player of rating <span class="math inline"><em>R</em><sub>1</sub></span> facing a player of rating <span class="math inline"><em>R</em><sub>2</sub></span>. Normally, Elo score are updated by taking the difference between a player’s expected number of wins in a tournament (under their initial Elo score) and their actual number of wins, multiplying</p>
+<h2 id="determining-a-new-players-rating-in-a-bayesian-way">Determining a new player’s rating in a Bayesian way</h2>
+<p>Suppose we have a new player face a cohort of players with established ratings. We would like to compute a rating for the new player. <a href="https://en.wikipedia.org/wiki/Elo_rating_system#Performance_rating">Wikipedia</a> specifies one way of doing this, but in my view this method is flawed. For example, if the new player plays someone with rating 400 greater than their own true rating, then it will improve their computed rating on average even if they lose.</p>
+<p>A more suitable choice for determining the new rating would be to choose the rating that, under the statistical assumptions of the Elo system, is most consistent with the outcome of the observed games. Phrased in a more Bayesian way, we might choose the <em>maximum a posteriori</em> rating (assuming a uniform prior). How does the log of the posterior look? Ignoring the marginal likelihood, we have <br /><span class="math display">log <em>P</em>(<em>R</em>) = ∑<sub><em>w</em><em>i</em><em>n</em><em>s</em></sub> − ln (1 + <em>e</em><sup><em>k</em>(<em>R</em><sub><em>i</em></sub> − <em>R</em>)</sup>) + ∑<sub><em>l</em><em>o</em><em>s</em><em>s</em><em>e</em><em>s</em></sub> − ln (1 + <em>e</em><sup><em>k</em>(<em>R</em> − <em>R</em><sub><em>i</em></sub>)</sup>)</span><br /> This is a sum of convex functions, so the maximum can be computed by differentiating and finding the root.</p>
+<p>We get a very clean interpretation, though, if we let <span class="math inline"><em>k</em> → ∞</span> in which case we can approximate <span class="math inline">ln (1 + <em>e</em><sup><em>x</em></sup>) ≈ max (0, <em>x</em>)</span>. The log probability becomes: <br /><span class="math display">log <em>P</em>(<em>R</em>) ≈ ∑<sub><em>w</em><em>i</em><em>n</em><em>s</em></sub> − max (0, <em>k</em>(<em>R</em><sub><em>i</em></sub> − <em>R</em>)) + ∑<sub><em>l</em><em>o</em><em>s</em><em>s</em><em>e</em><em>s</em></sub> − max (0, <em>k</em>(<em>R</em> − <em>R</em><sub><em>i</em></sub>))</span><br /> <br /><span class="math display"> = ∑<sub><em>w</em><em>i</em><em>n</em><em>s</em></sub>(<em>k</em><em>R</em> + <em>R</em><sub><em>i</em></sub>) + ∑<sub><em>i</em></sub> − max (0, <em>k</em>(<em>R</em> − <em>R</em><sub><em>i</em></sub>))</span><br /> <br /><span class="math display"> = <em>C</em> + <em>k</em>(#Wins+∑<sub><em>i</em></sub>−max(0,(<em>R</em>−<em>R</em><sub><em>i</em></sub>)))</span><br /></p>
+<p>The interpretation we get from this approximation is that the Elo of the new player should be set between that of the <span class="math inline"><em>n</em></span>th and <span class="math inline"><em>n</em> + 1</span>st highest rated players, where <span class="math inline"><em>n</em></span> is the number of games lost. This has the further nice property that if a player plays several people near her in rating, and if she loses to exactly those players better than her, her new score will be accurate.</p>
+</body>
+</html>

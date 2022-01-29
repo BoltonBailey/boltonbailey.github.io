@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Chess Generalized to the Constructible Numbers</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Chess Generalized to the Constructible Numbers</h1>
+<p class="date">2020-08-13T00:37:49-07:00</p>
+</header>
+<p>There are a lot of <a href="https://en.wikipedia.org/wiki/List_of_chess_variants">chess variants</a>. In all of the variants I could find on that page though, there are a finite number of squares a piece can occupy. I wonder what would happen if you extend chess to a plane.</p>
+<h2 id="the-rules">The Rules</h2>
+<p>All pieces are assigned a location in the set <span class="math inline"><em>S</em> × <em>S</em></span> where <span class="math inline"><em>S</em></span> is a set of numbers. A piece can be moved from one location to another in <span class="math inline"><em>S</em> × <em>S</em></span> according to the following rules</p>
+<ul>
+<li>A rook moves from <span class="math inline">(<em>x</em>, <em>y</em>)</span> to a coordinate of the form <span class="math inline">(<em>x</em> + <em>z</em>, <em>y</em>)</span> or <span class="math inline">(<em>x</em>, <em>y</em> + <em>z</em>)</span> where <span class="math inline"><em>z</em> ∈ <em>R</em></span>, and there can be no pieces on the line segment between the origin and destination.</li>
+<li>A bishop moves from <span class="math inline">(<em>x</em>, <em>y</em>)</span> to a coordinate of the form <span class="math inline">(<em>x</em> + <em>z</em>, <em>y</em> + <em>z</em>)</span> or <span class="math inline">(<em>x</em> + <em>z</em>, <em>y</em> − <em>z</em>)</span> where <span class="math inline"><em>z</em> ∈ <em>R</em></span>, and there can be no pieces on the line segment between the origin and destination.</li>
+<li>A knight moves to a point at distance exactly <span class="math inline">$\sqrt{5}$</span> away from its origin.</li>
+<li>A pawn moves 1 unit forward, or 1 unit forward and one unit laterally when capturing. They promote after reaching the starting point of an opponent piece.</li>
+<li>The queen moves as a Rook or Bishop</li>
+<li>The king moves distance at most <span class="math inline">$\sqrt{2}$</span>, but cannot move through or into attack. If the king is attacked or if the area the king can move to is less than half the area of its circle, then the king is in check. If there is no move which gets the king out of check, it is mate.</li>
+</ul>
+<h2 id="values-of-s">Values of <span class="math inline"><em>S</em></span></h2>
+<p>If <span class="math inline"><em>S</em></span> is simply the discrete set <span class="math inline">[8]</span> then we have something resembling regular chess (ignoring the special move rules and stalemate).</p>
+<p>It seems natural to require that <span class="math inline"><em>S</em> ⊆ [0, 8]</span>. This way a king and rook to checkmate in an approximation of the usual way.</p>
+<p>We have to restrict <span class="math inline"><em>S</em></span> to be countable so that players can specify moves, otherwise the game is more of a mathematical object than a game.</p>
+<p>Letting <span class="math inline"><em>S</em></span> be the set of computable numbers poses problems, as it becomes undecidable whether a move is a capture.</p>
+<p>Letting <span class="math inline"><em>S</em> = ℚ</span> works, but restricts the moves of knights.</p>
+<p>Letting <span class="math inline"><em>S</em></span> be a set of algebraic numbers works, but a more appropriate set perhaps is the constructible numbers, since most moves will likely depend on compass and straightedge constructions anyway.</p>
+<h2 id="sufficient-mating-material">Sufficient mating material</h2>
+<p>Rooks, Bishops and queens all mate. Note that by getting close to the king, they reduce the area the king can move to and force the king to move back to an edge.</p>
+<p>A king can mate another king if they are both in the corner of the board, but mate cannot be forced.</p>
+<p>A knight can position the enemy king just inside the knight’s circle, and then “drag” the enemy king to the corner of the board, where the knight’s king may be waiting. Thus, a knight and a king is sufficient to mate.</p>
+</body>
+</html>

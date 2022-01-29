@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>538 vs the Prediction Markets</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">538 vs the Prediction Markets</h1>
+<p class="date">2020-11-22T23:33:16-08:00</p>
+</header>
+<p>I was motivated to write this blog post after reading <a href="https://www.charlesrubenfeld.com/the-prediction-markets-were-right/">this blog post</a> arguing that prediction markets beat the 538 polling aggregator in predicting the outcome of the 2020 presidential election. I may be biased because I love Nate Silver and 538’s coverage, but I disagree with this opinion. I want to articulate my reasoning for this, trying not to rehash Silver’s own twitter arguments in his defense, but rather honing in on what I think is the cleanest argument in favor of 538.</p>
+<p>I’ll focus on the <a href="https://www.predictit.org/">PredictIt</a> prediction market in this post, I haven’t looked at any others. Feel free to apply my logic to other prediction markets and other poll aggregators - you can treat that as my opinion on the relative performance of those entities.</p>
+<h2 id="the-metric">The Metric</h2>
+<p>Critical to any argument about which of two things is “better” is the metric by which we make that decision. Rubenfeld’s post proposes a few metrics, such as the binary outcomes of the top line outcomes and the calibration of both predictors. Some of these metrics Rubenfeld essentially admits are a wash between 538 and the markets, and in some, he argues the markets do better. But on the other hand, I could argue that any one metric may have been cherry-picked to show one side or the other in a good light.</p>
+<p>The question I want to ask is, what is <em>the most fundamental metric</em> we could possibly use to evaluate the differences between the two prediction approaches? I would argue that the entire philosophy behind prediction markets clearly points to the following metric:</p>
+<p><strong>What is the amount of money a person betting solely on the belief that 538’s model was correct would have made or lost on the prediction market?</strong></p>
+<p>Indeed, the entire point of a prediction market is that money talks and that those who make good predictions will eventually come to dominate the market by virtue of their increasing capital. If you can outperform the market, the market admits you are right by following your probabilities more closely in the future, and for this reason, it would seem that. Nate Silver himself does not place bets on elections in order to maintain the impartiality of his reporting, but if he did bet, presumably he would bet the odds of his model.</p>
+<p>For a single market (setting aside market fees), a person betting on the basis of a single probability makes money if the probability they assign to the potential winner is greater than that of the market. <a href="https://projects.fivethirtyeight.com/2020-election-forecast/">538’s final model in 2020</a> assigned an 89% chance to Biden winning, while the Nov 2. price for <a href="https://www.predictit.org/markets/detail/3698">Biden shares on PredictIt</a> was 61 cents. On this basis alone, I would say that 538 “outperformed” PredictIt.</p>
+<h2 id="counterarguments-and-rebuttals">Counterarguments and Rebuttals</h2>
+<p><em>This is just a single election, it doesn’t prove on its own that Nate Silver is better than the PredictIt crowd.</em></p>
+<p>If you want to go back to 2016, <a href="https://www.predictit.org/markets/detail/1234/Who-will-win-the-2016-US-presidential-election">PredictIt gave Clinton 82 cents</a> and <a href="https://projects.fivethirtyeight.com/2016-election-forecast/">538 gave her 71.8%</a> the day before the election, so I would say Nate won that prediction too. In fact, I think there’s a nice way to combine multiple years worth of differences between 538 and PredictIt into a long term overall winner, which I will address <a href="#the-kelly-criterion">below</a>.</p>
+<p><em>Why look only at the day before the election - wouldn’t it be better to compare over the entire range of predictions made over the course of the model’s existence?</em></p>
+<p>Indeed it would be. The lowest chance the 538 model ever gave Biden was 67% and the highest PredictIt ever gave him was 68 - but not at the same time. Luckily for the sake of my argument, you could have made Nate place his hypothetical bet any time during the course of the campaign and he would have come out ahead in the end.</p>
+<p><em>What about state level markets, or markets on the margins of victory?</em></p>
+<p>I haven’t looked into these because I don’t want to spend the time to do so. In fact, if betting 538’s odds on these markets would have resulted in a loss, I would be happy to reverse my opinion in this blog post and admit that the markets outperformed the model in this respect.</p>
+<h2 id="the-kelly-criterion">The Kelly Criterion</h2>
+<p>It might be unfair to judge the results of 538 or betting markets on the basis of a single election where neither system expresses certainty about the outcome. Luckily, the principle of “does an individual make money off the markets by betting the 538 belief?” can be extended to multiple elections. One can ask how much money an individual would make if, starting with $10, they bet 538 beliefs each election year.</p>
+<p>To determine the amount of each bet, one could use the <a href="https://en.wikipedia.org/wiki/Kelly_criterion">Kelly Criterion</a> which is a system for deciding how much to bet which derives from maximizing the expected logarithm of your money. The Kelley system has nice mathematical properties that make it natural as a long term betting strategy.</p>
+<p>To further expound on this, since 538 publishes probability predictions on a wide variety of political events (primaries, popular vote losses, trifectas) that PredictIt carries, one could set up a Kelley trading system to manage all of them. Kelley betting naturally extends to multiple simultaneous bets, although one would have to incorporate the 538’s model’s belief in the correlation of certain events. 538 doesn’t publish all of these correlations, but some inter-state correlations can be inferred from their <a href="https://projects.fivethirtyeight.com/trump-biden-election-map/">interactives</a>.</p>
+<p>Since, as I mentioned, 538 was closer to the mark both on Clinton’s loss and Biden’s win, they would clearly come out ahead over the past two presidential cycles. If 538 were to mispredict in the future, I think this would be a fair way to judge the model in the long term, and it’s something we should take into account if 538 has an off year in the future.</p>
+</body>
+</html>

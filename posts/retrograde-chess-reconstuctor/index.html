@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Retrograde Chess Reconstructor</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Retrograde Chess Reconstructor</h1>
+</header>
+<p>An engine that takes a chess position and tries to construct a sensible sequence of moves that result in that position. Sensible in the sense that the sequence of moves minimizes some measure of average number of mistakes per move like centipawn loss, so that reasonable players could reach the position.</p>
+<p>This works on the same principle as the <a href="../freecell-ai/index.html">freecell solver</a>. We create a virtual graph of all chess positions as a subclass of the <code>networkx.Digraph</code> class. We then weight edges by the difference in scores between them, (plus a small constant to avoid unnecessarily long games). The networkx A-Star implementation then searches for a good sequence of moves.</p>
+<h2 id="goal-1-construct-a-realistic-game-in-which-a-three-knights-mate-is-required-to-win">Goal 1: Construct a realistic game in which a three-knights-mate is required to win</h2>
+<p>I evaluated this “final position”</p>
+<pre class="txt"><code>. . . . . . . .
+q . P . k . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. N . . K . N .</code></pre>
+<p>Since from this position, it is clear that underpromotion to a knight forks the queen and leads to a three knights mate. Promotion to queen immediately loses both knights on the first rank and leads to a draw.</p>
+<p>The first move that A-Star searches is</p>
+<pre class="txt"><code>. . . . . . . .
+Q . P . k . . .
+. . . . . . . .
+. . . . . . . .
+q . . . . . . .
+. . . . . . . .
+. . . . . . . .
+. N . . K . N .</code></pre>
+<p>Of all 900 positions from which black can reach the final position in one move, it seems this is the one in which that move has the least centipawn loss. It certainly makes sense to capture the white queen, which is hanging and threatening discovered check.</p>
+<h2 id="goal-2-should-also-be-able-to-solve-smullyan-type-puzzles.">Goal 2: Should also be able to solve Smullyan type puzzles.</h2>
+<p>TODO</p>
+</body>
+</html>

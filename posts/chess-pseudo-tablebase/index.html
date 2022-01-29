@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Chess Pseudo Tablebase</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Chess Pseudo Tablebase</h1>
+<p class="date">2020-08-07T01:53:03-07:00</p>
+</header>
+<p>An endgame tablebase in chess is a database of results for all games with a certain number of pieces left. Thus, it requires <span class="math inline"><em>O</em>(1)</span> time to look up the winner and a great deal of space to store the positions, depending on how things are compressed.</p>
+<p>But what if we were allowed to do a little computation beyond a simple lookup? In other words, consider the challenge of designing a program which always determines a position correctly in a fixed amount of time, but uses as little storage as possible.</p>
+<p>Here is a proposal algorithm for this: Run stockfish for constant number of nodes (e.g. so as to take 0.01 seconds) on a given position, then guess if the position is winning based off the stockfish evaluation. Then list all positions for which this approach is wrong in the database, perhaps with bloom filter. This gives an algorithm which is not as quick, but compresses the tablebase in the most efficient way possible, that is, by actually using the semantic properties of the chess rules with respect to the data being compressed.</p>
+<p>In one extreme, the database is empty, and we just run stockfish to completion. In the other extreme, we have a tablebase in the regular sense of the term.</p>
+<p>Another, unrelated remark about tablebases: Most simply cover all positions with a certain number of pieces. Why not make a tablebase for “realistic” positions somehow?</p>
+</body>
+</html>

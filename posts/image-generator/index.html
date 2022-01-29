@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Image Generator</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Image Generator</h1>
+<p class="date">2020-03-22T21:46:54-05:00</p>
+</header>
+<p>This project contains code to generate visually interesting images based off of recurrence relations. The core file is <a href="./imagegenerator.py">imagegenerator.py</a>, which converts mathematical functions from the plane to colors into image files. I made a few files that use this framework.</p>
+<p>TODO links to pictures</p>
+<h2 id="mandelbrot">Mandelbrot</h2>
+<p>The <a href="./mandelbrot.py">mandelbrot.py</a> file contains code for generating images of the Mandelbrot set.</p>
+<p><img src="images/mandelbrot_288_180.png" /></p>
+<p><strong>Theorem:</strong> Any Mandelbrot iteration which ever escapes the critical radius of 2 diverges.</p>
+<p><strong>Proof:</strong> For any Mandelbrot iteration with parameter <span class="math inline"><em>c</em></span>, if <span class="math inline">|<em>z</em><sub><em>i</em></sub>|<sup>2</sup> − |<em>c</em>| &gt; |<em>z</em><sub><em>i</em></sub>|</span>, then one can easily see that <span class="math inline">|<em>z</em><sub><em>i</em> + <em>k</em></sub>|</span> is strictly increasing without bound for positive <span class="math inline"><em>k</em></span>. If <span class="math inline">|<em>z</em><sub><em>i</em></sub>| &gt; 2</span>, then either <span class="math inline">|<em>c</em>| ≤ 2</span> and the inequality holds for <span class="math inline"><em>z</em><sub><em>i</em></sub></span>, or <span class="math inline">|<em>c</em>| &gt; 2</span> and the inequality holds for <span class="math inline"><em>z</em><sub>0</sub></span>.</p>
+<p>Note also that 2 is the lowest constant for which this fact holds, since <span class="math inline"> − 2</span> is in the Mandelbrot set. This is useful for computer generating images of the set, since we can stop the iteration once we exceed the critical radius.</p>
+<p>Because of this, a typical Mandelbrot rendering might color the complement of the Mandelbrot according to the iteration in which the sequence escapes the critical radius. This leads to a coloring with noticeable edges between zones. But you’ll notice my image has a nice smooth gradient. To get this, it is necessary to color according to a quantity that is continuous on the complement of the Mandelbrot set.</p>
+<p>A good candidate for this is the limit: <br /><span class="math display">lim<sub><em>i</em> → ∞</sub>log (|<em>z</em><sub><em>i</em></sub>|)/2<sup><em>i</em></sup></span><br /> This sequence converges whenever the Mandelbrot iteration <span class="math inline"><em>z</em><sub><em>i</em></sub></span> diverges. This can be seen by analyzing the difference between adjacent terms <br /><span class="math display">log (|<em>z</em><sub><em>i</em></sub><sup>2</sup> + <em>c</em>|)/2<sup><em>i</em> + 1</sup> − log (|<em>z</em><sub><em>i</em></sub>|)/2<sup><em>i</em></sup></span><br /> <br /><span class="math display"> = 1/2<sup><em>i</em> + 1</sup>(log (|<em>z</em><sub><em>i</em></sub><sup>2</sup> + <em>c</em>|) − 2log (|<em>z</em><sub><em>i</em></sub>|))</span><br /> <br /><span class="math display"> = 1/2<sup><em>i</em> + 1</sup>(log (|<em>z</em><sub><em>i</em></sub><sup>2</sup> + <em>c</em>|/|<em>z</em><sub><em>i</em></sub>|<sup>2</sup>))</span><br /> <br /><span class="math display"> = 1/2<sup><em>i</em> + 1</sup>(log (|(<em>z</em><sub><em>i</em></sub><sup>2</sup> + <em>c</em>)/(<em>z</em><sub><em>i</em></sub>)<sup>2</sup>|))</span><br /> <br /><span class="math display"> = 1/2<sup><em>i</em> + 1</sup>(log (|1 + <em>c</em>/<em>z</em><sub><em>i</em></sub><sup>2</sup>|))</span><br /> which decreases exponentially with <span class="math inline"><em>i</em></span> once <span class="math inline"><em>z</em><sub><em>i</em></sub></span> has sufficiently large magnitude.</p>
+<p>The nice thing about this limit as a basis for a plot of the Mandelbrot complement is that we can define a “pseudo escape iteration” <span class="math inline"><em>i</em><sub><em>e</em><em>s</em><em>c</em><em>a</em><em>p</em><em>e</em></sub></span> by setting <br /><span class="math display">lim<sub><em>i</em> → ∞</sub>log (|<em>z</em><sub><em>i</em></sub>|)/2<sup><em>i</em></sup> = log (2)/2<sub><em>e</em><em>s</em><em>c</em><em>a</em><em>p</em><em>e</em></sub><sup><em>i</em></sup></span><br /> The quantity <span class="math inline"><em>i</em><sub><em>e</em><em>s</em><em>c</em><em>a</em><em>p</em><em>e</em></sub></span> can be thought of as the iteration at which we hit <span class="math inline">|<em>z</em><sub><em>i</em><sub><em>e</em><em>s</em><em>c</em><em>a</em><em>p</em><em>e</em></sub></sub>| = 2</span> making the fictitious assumption that the sequence <span class="math inline">log (|<em>z</em><sub><em>i</em></sub>|)/2<sup><em>i</em></sup></span> does not only converge, but is constant. To approximate <span class="math inline"><em>i</em><sub><em>e</em><em>s</em><em>c</em><em>a</em><em>p</em><em>e</em></sub></span> computationally, we approximate the limit by <span class="math inline">log (|<em>z</em><sub><em>i</em><sup>*</sup></sub>|)/2<sup><em>i</em><sup>*</sup></sup></span> for <span class="math inline">|<em>z</em><sub><em>i</em><sup>*</sup></sub>|</span> large (in my code, <span class="math inline"><em>i</em><sup>*</sup></span> is the first <span class="math inline"><em>i</em></span> for which <span class="math inline">|<em>z</em><sub><em>i</em></sub>| &gt; 50</span>) <br /><span class="math display">log (|<em>z</em><sub><em>i</em><sup>*</sup></sub>|)/2<sup><em>i</em><sup>*</sup></sup> = log (2)/2<sub><em>e</em><em>s</em><em>c</em><em>a</em><em>p</em><em>e</em></sub><sup><em>i</em></sup></span><br /> <br /><span class="math display">log<sub>2</sub>(|<em>z</em><sub><em>i</em><sup>*</sup></sub>|)/2<sup><em>i</em><sup>*</sup></sup> = 1/2<sub><em>e</em><em>s</em><em>c</em><em>a</em><em>p</em><em>e</em></sub><sup><em>i</em></sup></span><br /> <br /><span class="math display"><em>i</em><sub><em>e</em><em>s</em><em>c</em><em>a</em><em>p</em><em>e</em></sub> =  − log<sub>2</sub>(log<sub>2</sub>(|<em>z</em><sub><em>i</em><sup>*</sup></sub>|)/2<sup><em>i</em><sup>*</sup></sup>)</span><br /> <br /><span class="math display"><em>i</em><sub><em>e</em><em>s</em><em>c</em><em>a</em><em>p</em><em>e</em></sub> = <em>i</em><sup>*</sup> − log<sub>2</sub>(log<sub>2</sub>(|<em>z</em><sub><em>i</em><sup>*</sup></sub>|))</span><br /></p>
+<h2 id="mandelbrot-computable-version">Mandelbrot (Computable Version)</h2>
+<p>I have <a href="computablemandelbrot.py">another Mandelbrot image generation file</a> in this directory, which is more focused on computationally proving that given regions of the plane are contained in, or disjoint from, the Mandelbrot set.</p>
+<h2 id="sandpile">Sandpile</h2>
+<p>The <a href="sandpile.py" class="uri">sandpile.py</a> file contains code for generating <a href="https://en.wikipedia.org/wiki/Abelian_sandpile_model#Sandpile_models_on_infinite_grids">Abelian sandpiles</a>. Here is a GIF of sand being dropped onto the pile one at a time.</p>
+<p><img src="images/sandpile/sandpile.gif" /></p>
+<h2 id="fractals">Fractals</h2>
+</body>
+</html>
