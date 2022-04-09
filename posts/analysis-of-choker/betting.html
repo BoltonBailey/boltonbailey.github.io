@@ -11,6 +11,7 @@
       span.underline{text-decoration: underline;}
       div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -22,7 +23,7 @@
 </header>
 <p>This post analyzes the game <a href="https://chokergame.com/">Choker</a>, which combines elements of chess and poker. The full rules are <a href="https://chokergame.com/rules/">here</a>. A visual explanation is given by <a href="https://chokergame.com/wp-content/uploads/2019/01/2-page-app-rules.pdf">this pdf</a> (though this one doesn’t fully explain what happens if three queens and two rooks are dealt). This post explicitly deals with the betting stage of a choker hand. I also want to analyze the [placement and chess]({{&lt;relref “./placement-and-chess.html”&gt;}}) phase, but for now, this is a TODO.</p>
 <h2 id="observations-on-the-possible-piece-sets">Observations on the Possible Piece Sets</h2>
-<p>The order in which cards are dealt does not matter with respect to the piece set entering the placement phase. There are five types of pieces, any combination of which can be dealt (with the exception of five queens, since there are only 4 queens in the deck). By stars and bars, there are therefore <span class="math inline">$\binom{5 + 4}{5} - 1 = 125$</span> distinct hands. The Promotion, Demotion, Palace and Empress rules restrict the number of piece sets to 48 (or 47, see the “Becket Variation”).</p>
+<p>The order in which cards are dealt does not matter with respect to the piece set entering the placement phase. There are five types of pieces, any combination of which can be dealt (with the exception of five queens, since there are only 4 queens in the deck). By stars and bars, there are therefore <span class="math inline">\(\binom{5 + 4}{5} - 1 = 125\)</span> distinct hands. The Promotion, Demotion, Palace and Empress rules restrict the number of piece sets to 48 (or 47, see the “Becket Variation”).</p>
 <p>Obviously important is the number of <a href="https://en.wikipedia.org/wiki/Chess_piece_relative_value">points</a> in the final hand, since the hand with more points will usually win.</p>
 <p>My programmatic analysis (<a href="choker.py">code</a> <a href="analysis.py">here</a>) of the hands and their point values can be found in the <a href="#tables">tables</a> section. Some summary statistics:</p>
 <ul>

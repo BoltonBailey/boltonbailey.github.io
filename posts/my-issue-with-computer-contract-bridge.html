@@ -11,6 +11,7 @@
       span.underline{text-decoration: underline;}
       div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -27,7 +28,7 @@
 <p>During the auction and before the final pass any player may request, at his own turn to call, an explanation of the opponents’ auction. He is entitled to know about calls actually made, about relevant alternative calls available that were not made, and about inferences from the choice of action where these are matters of partnership understanding … the Regulating Authority may establish regulations for written explanations.</p>
 </blockquote>
 <p>My issue was with the final clause, delegating the “regulations for written explanations” to the “Regulating Authority”. Looking further into this, the definition of the “Regulating Authority”, which is defined in Law 80 to be either the World Bridge Federation, or some other organization depending on where the game is played. Looking into the WBF, I found they actually do specify <a href="http://db.worldbridge.org/Repository/departments/systems/policy.asp">allowed systems</a>. But in terms of how players are supposed to communicate their system to their opponents, all I can find is that they are supposed to “submit the full system in English”.</p>
-<p>Obviously in any given situation, the decision of what to bid may depend on one’s cards, the previous bids, and the opponent’s provided information about the meaning of their bids. In the fullest generality for a deterministic bidding algorithm, the “meaning of a bid” is simply the set of all possible hands that would result in one’s partner’s bids until that point. Since there are <span class="math inline">$\binom{52}{13}$</span> possible hands, communicating a meaning in full generality is infeasible for computers. Furthermore, the set of bidding algorithms would grow not exponentially, but by tetration in this number and the number of bids.</p>
+<p>Obviously in any given situation, the decision of what to bid may depend on one’s cards, the previous bids, and the opponent’s provided information about the meaning of their bids. In the fullest generality for a deterministic bidding algorithm, the “meaning of a bid” is simply the set of all possible hands that would result in one’s partner’s bids until that point. Since there are <span class="math inline">\(\binom{52}{13}\)</span> possible hands, communicating a meaning in full generality is infeasible for computers. Furthermore, the set of bidding algorithms would grow not exponentially, but by tetration in this number and the number of bids.</p>
 <p>Perhaps computers should convey bids in some syntax using “and” “or” and predicates on the suit counts and HCP of the hand. But then how long can such a message be?</p>
 <p>The possibility of nondeterministic bidding, or “psychic bids”, complicates things further. Wikipedia says of psychic bids</p>
 <blockquote>

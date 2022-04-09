@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Quidditch Strategy</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Quidditch Strategy</h1>
+<p class="date">2020-01-07T23:00:15-04:00</p>
+</header>
+<h2 id="seeker-strategy">Seeker Strategy</h2>
+<p>Since the snitch awards 150 points and ends the game it is obvious that the seeker of a team B trailing team A by 160 points or more should not play to catch the snitch. This leads to an interesting strategic observation: What should seeker B do instead? While the rules likely stipulate that a seeker cannot handle the quaffle (and thereby become a chaser in effect) they might still perform screen plays, as I believe it’s canon that it is illegal to intentionally collide with another player. Perhaps it’s like basketball, where it depends on if the defending player is moving.</p>
+<p>Thus, you might get games where the the chasers/keepers of team A are good enough to maintain a positive point differential over time against B, but they are bad enough to have a negative differential when B’s seeker is screening. The score differential might then hover around 150 points in team A’s favor, with seeker B dynamically switching between seeking and screening, with random fluctuations in the score leading to an interesting midgame with exciting but less likely opportunities for B to steal the game.</p>
+<p>On the other hand, beater behavior might also change depending on the score differential. The beaters from both teams should focus less on attacking/defending B’s seeker in the &gt;150 scenario, but whether this advantages or disadvantages the chaser unit of team A isn’t clear.</p>
+<h2 id="ideas-for-an-ai-playground">Ideas for an AI playground</h2>
+<p>It might be fun to create a little AI playground/video game for Quidditch. Here are my ideas on that front:</p>
+<ul>
+<li>Players might be represented by points upon which some force chosen by the player acts. The force has some maximum magnitude/max jerk. Different skills/tradeoffs in brooms could be reflected in tradeoffs on these limitations.</li>
+<li>All players and balls could be acted on by gravity/wind resistance.
+<ul>
+<li>The quaffle: I think it’s canon that there’s a spell which causes the quaffle to fall slowly so maybe model this by imposing less gravity. Chasers would have more inertia when holding it. Alternatively, the quaffle is a sphere which can intersect a chaser, and a chaser intersecting the quaffle can choose to apply force to it (obviously this has an equal opposite reaction on the chaser’s mass, leading to a higher total mass.)</li>
+</ul></li>
+<li>The bludgers might have force on them too, controlled by some simple AI. Maybe something like “The bludger assumes all players maintain their current course and then chooses the non-beater player it can collide with the fastest”. Ideally, I think, the parameters should be such that on a pitch with one chaser, one bludger and a few beaters, the chaser is eventually hit by the bludger if and only if they have the same or fewer beaters on their side as on the opponents side.</li>
+<li>The snitch might display some kind of brownian motion, with forces keeping it on the field and away from seekers. It might disappear and reappear to simulate how hard it is to see (even seekers with different eyesight could be specified). Ideally, it think the parameters should be such that on a pitch with two seekers and a snitch, a player who sights the snitch has a 50% chance of catching it before the other opponent arrives, leading to the emergent behavior of searching for the snitch, but doing so in such a way that the opposing seeker can’t tell if you have seen it yet or not.</li>
+<li>Wind resistance might be achieved by a force field evolving over time (an <span class="math inline">\(f: \mathbb{R}^4 \to \mathbb{R}^3\)</span> valued random function) with the following properties:
+<ul>
+<li><span class="math inline">\(f(x)\)</span> is gaussian distributed for all <span class="math inline">\(x\)</span></li>
+<li><span class="math inline">\(f(x), f(y)\)</span> are gaussian, and correlated, with correlation coefficient continuously, monotonically depending only on the distance from <span class="math inline">\(x\)</span> to <span class="math inline">\(y\)</span>. I guess this is a <a href="https://en.wikipedia.org/wiki/Gaussian_random_field">Gaussian Random Field</a></li>
+</ul></li>
+<li>If the bludger hits a player, they drop the quaffle and are inactive for some time.</li>
+<li>If a player collides with another, we might say the faster player commits a foul. We could also have an elastic collision of spheres. And let the mass of the player be an optimizable parameter (lighter is more maneuverable, but is harder to keep control of the quaffle when they collide). There might even be some kind of draft system at the beginning of the game, where you are offered a selection of player parameters (with broom force, broom jerk, player size, player mass, player eyesight (measured as how close to the snitch do you have to be to see it) as options.)</li>
+<li>Beaters impart some impulse on the bludger when they collide.</li>
+<li>There is a goal area that only the keeper can legally enter.</li>
+<li>The balls should bounce when they hit the ground, players should bounce, but lose some momentum.</li>
+</ul>
+<p>Initially I thought this might make a good open AI gym environment? After using openAI gym in a class project, I don’t think their framework is very good or supports multi-agent.</p>
+</body>
+</html>

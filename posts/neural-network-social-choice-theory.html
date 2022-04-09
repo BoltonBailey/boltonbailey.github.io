@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Neural Network Social Choice Theory</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Neural Network Social Choice Theory</h1>
+<p class="date">2020-05-27T23:05:48-04:00</p>
+</header>
+<p>I took a few classes in college that dealt with social choice theory and mechanism design, and learned about classic results like the Condorcet paradox and Arrow’s impossibility theorem. These are interesting paradoxes, but I feel like approaching voting from their direction puts one too much in the negative mindset of “no voting system is good” rather than the more productive mindset of “what is the best possible voting system and what do we mean by best?”.</p>
+<p>With this in mind, consider the following formulation of the problem of designing a social choice system (with some parameters).</p>
+<ul>
+<li>There are <span class="math inline">\(N\)</span> individuals <span class="math inline">\(i \in {0, ..., N-1}\)</span></li>
+<li>There are <span class="math inline">\(P\)</span> policies <span class="math inline">\(i \in {0, ..., P-1}\)</span>.</li>
+<li>Each individual-policy pair has a utility <span class="math inline">\(u_{ij}\)</span> which we assume to be i.i.d. normally distributed.
+<ul>
+<li>One could modify this assumption to
+<ul>
+<li>Use uniform distributions</li>
+<li>Use a distribution that reflects skewness in policy choice</li>
+<li>Make more reasonable assumptions about the clustering of policies (i.e. the matrix <span class="math inline">\(U\)</span> will likely be approximately low rank).</li>
+</ul></li>
+</ul></li>
+<li>Consider the set of Normal-form games where the players are the individuals, the action spaces are all finite of size <span class="math inline">\(K\)</span>, there is a map from action profiles to policies, and the utilities of the players are their utilities for the corresponding policy</li>
+<li>We want to design a normal-form game with the largest expected sum of utilities at the (maximum/minimum) Mixed Strategy Nash equilibrium.</li>
+<li>Another consideration, is the size and symmetry of the action spaces.</li>
+</ul>
+<p>Note:</p>
+<ul>
+<li>By using MSNE, we are inherently introducing randomness into the choice function. This feels icky somehow, probably because we are used to determinism in voting systems, and it feels wrong that politics should be left to chance. On the other hand, it seems like this is the only practical way to resolve the paradoxes mentioned earlier.</li>
+<li>In a lot of mechanism design, we would have the action spaces be the set of all types, and then require that the system is incentive compatible. But here we are trying to think in terms of the utilities of the individuals, which are best described by points in a continuous space, so the space of types is infinite. It is infeasible to create a ballot with infinitely many options, since they don’t make sheets of paper that big, so instead I bound the action space size.
+<ul>
+<li>I need to brush up on this, but I think this doesn’t work because you can’t design something that is incentive compatible for all types.</li>
+</ul></li>
+<li>Is it better to look at the maximum MSNE or the minimum? Seems philosophical which one is better. Are the paradoxes creeping back in here?</li>
+<li>From a desire for fairness, it seems like we should require the same action set for all individuals and symmetry across both action spaces and policy choices
+<ul>
+<li>Perhaps action profiles could be associated with policy mixtures instead - i.e. if people vote this way, then we flip a coin to choose between A and B. Ignoring action set size, we can then transform any collection of asymmetric action spaces to a symmetric one by introducing a round where a random permutation of players-to-action spaces is chosen. This is even more problematic in terms of randomness.</li>
+</ul></li>
+<li>One could use data from past elections to improve the model of <span class="math inline">\(U_{ij}\)</span> in a Bayesian update. But would individuals then be incentivized to lie about their preferences (i.e. select an action other than the one corresponding to their type) in the hopes of a more favorable outcome to future elections?</li>
+<li>Clearly, as <span class="math inline">\(K\)</span> increases the expected optimum sum of utilities is nondecreasing. The optimum for any <span class="math inline">\(K\)</span> can be upper bounded by <span class="math inline">\(N\)</span> times the expected value of the maximum order statistic of <span class="math inline">\(P\)</span> normals. Thus, this sequence has a limit.</li>
+</ul>
+<p><em>Conjecture (Fairly certain)</em> one should be able to prove that majority vote is optimal for <span class="math inline">\(P=2\)</span> for any <span class="math inline">\(N\)</span> and <span class="math inline">\(K\)</span>.</p>
+<p><em>Conjecture (More uncertain)</em> With <span class="math inline">\(K = P\)</span>, either plurality vote or anti-plurality vote (that is, vote your least favorite, and the one with least votes wins) is optimal.</p>
+<p><em>Question</em> What happens if <span class="math inline">\(K = P+1\)</span>? Does the additional action never get used? If we allow asymmetry among polices, what do we get?</p>
+<p><em>Question</em> What happens if <span class="math inline">\(K = \binom{P}{2}\)</span>? Do we get a vote-for-your-top-2 system?</p>
+<h3 id="a-more-practical-version-with-neural-networks">A more practical version with neural networks</h3>
+<p>I think the above is interesting from a mathematical perspective. However, it is impractical because computing the Nash Equilibria of <span class="math inline">\(N^{KA}\)</span> many games is infeasible. Instead, let us approximate using a neural network approach.</p>
+<p>Let the social choice function be defined by a randomly initialized neural network (perhaps deep perhaps one-layer) from (N copies of) a vector space representing actions to policies. If one wanted it to be symmetric over players, one might sum the vectors before putting the result through the network. Model the strategy of a voter by a neural network which takes in the voter’s type and returns a point in the action vector space.</p>
+<p>Now train the choice function network and probability network simultaneously.</p>
+<p>To train the choice function network, randomly sample <span class="math inline">\(N\)</span> voter types, then randomly sample actions given by the strategy network on those types, and backpropagate on the expected utility of the voters over the distribution of outcomes.</p>
+<p>To train the strategy network, generate N-1 actions by randomly sampling voter types and running them through the strategy network. Then, randomly sample one voter type to train the network to do better on: Eor each action of the one voter, compute the expected utility of that action for that voter using the choice network. Backpropagate to improve this value.</p>
+<p>An unfortunate aspect is that most examples of strategic voting that I can think of occur when the distribution on types is not symmetric. For example, in an election with two frontrunners, people strategically vote for one of those two, even if a third candidate was their favorite. Perhaps the best way to remedy this would be to have a distribution over type distributions. Something like, “each candidate has a normally distributed base popularity score, and then an individual voter’s utilities add a Gaussian on top of that”.</p>
+</body>
+</html>

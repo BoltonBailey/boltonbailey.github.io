@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Cryptocurrency Debate Tree</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Cryptocurrency Debate Tree</h1>
+<p class="date">2022-03-15T00:00:00-00:00</p>
+</header>
+<p>This file contains a debate tree on various cryptocurrency topics. I have tried to add arguments whenever I find them. Pro-crypto arguments in normal typeface. <em>Anti-crypto arguments in italics</em>.</p>
+<ul>
+<li>Bitcoin is good for international remittances
+<ul>
+<li>They help poor migrants send money to their families</li>
+<li>Western union charges large fees
+<ul>
+<li><em>Don’t cryptocurrencies have large fees?</em>
+<ul>
+<li><a href="https://ycharts.com/indicators/bitcoin_average_transaction_fee">Here</a> is a chart for Bitcoin fees.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>In 2008, the Fed bailed out banks in the financial crisis, creating a moral hazard. Bitcoin is a “hard money” store of value that can’t be debased by a government.
+<ul>
+<li><em>Ultimately it was necessary to bail out banks then, to prevent the collapse of the economy. It’s good that the Fed can handle monetary policy. This helps in times of crisis, like with COVID-19 stimulus.</em></li>
+</ul></li>
+<li>Bitcoin is used in financially unstable countries where the traditional system isn’t working well. Quoting a <a href="https://vitalik.ca/general/2022/04/01/maximalist.html">blog post from Vitalik</a> “As it turns out, by far the most successful (application) is storing wealth and payments. 3% of Argentinians own cryptocurrency, as do 6% of Nigerians and 12% of people in Ukraine”.</li>
+<li>Bitcoin could act as an international currency, facilitating trade.
+<ul>
+<li><em>This is actually a bad thing. Bitcoin could hurt US economic influence by decreasing global reliance on the dollar.</em>
+<ul>
+<li>Is that really so bad?
+<ul>
+<li><em>Well, it would be harder to impose sanctions on Iran/North Korea/Russia</em>
+<ul>
+<li>Why? Aren’t sanctions just <a href="https://www.investopedia.com/articles/economics/10/economic-sanctions.asp">trade restrictions and taxes</a>? Can’t we impose these no matter what currency trades are denominated in?
+<ul>
+<li><em>That link also mentions asset freezes.</em></li>
+</ul></li>
+</ul></li>
+<li><em>Yes. US influence is fundamentally good.</em>
+<ul>
+<li>For the US or for the rest of the world?
+<ul>
+<li><em>For the US</em>
+<ul>
+<li>It seems like any currency being the reserve gives that country an advantage. That’s unfair.
+<ul>
+<li><em>It is still better on net to have one country get the benefit than none at all.</em>
+<ul>
+<li>See my point on international standards.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>For the rest of the world.</em>
+<ul>
+<li>The debate gets political from here.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Bitcoin could be used as a day-to-day currency.
+<ul>
+<li><em>7 transaction/sec is not enough throughput for this</em>
+<ul>
+<li>Use the Lightning Network
+<ul>
+<li><em>Say that all bitcoin transactions were solely devoted to setting up a single lightning channel for each of 300m Americans. At 7tx/sec, this would take 1.3 years.</em>
+<ul>
+<li>Hopefully we can scale layer 1 to more than 7tx/sec.</li>
+<li><em>…and this doesn’t even factor in the rest of the world</em></li>
+<li><em>…and this doesn’t even factor in that lightning transactions are probably bigger than normal transactions</em>
+<ul>
+<li>Actually no, not with pay-2-script-hash</li>
+</ul></li>
+<li><em>…and this doesn’t even factor in that sometimes channels need to be closed, resulting in more chain space needed</em>
+<ul>
+<li>Perhaps channels can be stable enough to last years.</li>
+</ul></li>
+<li><em>…and this doesn’t even factor in that for LN to be decentralized, the average user will probably need at least 3 channels.</em></li>
+</ul></li>
+<li><em>LN is too hard to use</em></li>
+<li><em>LN requires you to be online frequently</em>
+<ul>
+<li>Watchtowers</li>
+</ul></li>
+<li><em>LN is centralized, everything we know about network evolutions dictates that hubs will form</em>
+<ul>
+<li>This is fine and good. The point is that if a central LN hub starts screwing you, then users will automatically decentralize.</li>
+</ul></li>
+<li><em>No one uses LN, so you can’t pay anyone with it</em>
+<ul>
+<li>Look at <a href="https://bitcoinvisuals.com/lightning">these charts</a>, that show growth
+<ul>
+<li><em>Still not much though</em></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>DeFi could be a better stock market, with shorter hold times.</li>
+<li>ENS could be a better DNS
+<ul>
+<li><em>We already have DNS, which works fine. Fees still make ENS more expensive than DNS.</em>
+<ul>
+<li>Per <a href="https://twitter.com/elidourado/status/1481112732367785986?s=20">Eli Dourado</a>: ENS could help ensure a bad country doesn’t <a href="https://arstechnica.com/tech-policy/2012/12/behind-closed-doors-at-the-uns-attempted-takeover-of-the-internet/">take over the internet</a>.</li>
+<li>Perhaps with scalability improvements the fee situation could change. The base rate for an ENS name is 5DAI/year, whereas it seems like it’s $12/year for e.g. the google domains registrar.
+<ul>
+<li>One could imagine a simple smart contract that subdomains off <code>.eth</code> and gives permanent domains for free. What would the gas price of such a contract be?
+<ul>
+<li><em>Why not just use a Github pages site?</em></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>Chrome and Firefox don’t support ENS</em>
+<ul>
+<li>You can use <code>.eth.link</code> with metamask.</li>
+</ul></li>
+</ul></li>
+<li>“Peer-to-Peer Cloud Computing”. My desktop and laptop have tons of unused cycles and storage space, wouldn’t it be profitable to have everyone automatically rent their PCs and increase the compute supply to the world economy? Blockchains could facilitate this. TODO (list a few)
+<ul>
+<li><em>The cryptographic overhead makes this more expensive than just using trustworthy AWS</em>
+<ul>
+<li>Need to find some numbers. Even so, if cryptographic improvements are made, it could tip in favor of peer-to-peer.</li>
+<li>One could use a cryptoeconomic approach, such as truebit.
+<ul>
+<li><em>This still has overhead and is not a guarantee on security</em>.</li>
+</ul></li>
+</ul></li>
+<li><em>Privacy concerns mean this only works for limited applications</em>
+<ul>
+<li>Use secure MPC.</li>
+<li>Even if this only works for limited applications, it still supplies compute and partially competes with the traditional cloud.</li>
+</ul></li>
+<li><em>Power for residential is probably more expensive than at data centers</em>
+<ul>
+<li>We need numbers on how fast laptops break and whether the speed at which they break depends on usage. We could possibly get more out of our chips, even if we get less out of our electricity.</li>
+<li>Residential uses electricity to heat their homes anyway. So why not just stick a large computer in the home and let that double as a heater? Some companies are doing this.
+<ul>
+<li><em>Again, the cryptographic overhead makes this inefficient</em></li>
+</ul></li>
+<li>Data point: Golem network seems to pay for compute at about breakeven rates for electricity.</li>
+<li><em>Data Point: well-known Filecoin actually requires <a href="https://lotus.filecoin.io/docs/set-up/install/#minimal-requirements">10TB</a> just to start using their network</em>
+<ul>
+<li>Surprising this is so high, not sure why an alternative with smaller requirements can’t be made.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Perhaps there are other ideas, not analogous to any business models today, that are only possible in “Web 3.0” and we just haven’t thought of them because they are foreign to our way of thinking.
+<ul>
+<li><em>That argument is pretty handwavy</em>
+<ul>
+<li>Perhaps, but you could hardly have expected an internet proponent in the 80’s to have been able to solidly argue that netflix or facebook would be possible.</li>
+</ul></li>
+</ul></li>
+<li><em>If these ideas are possible, why aren’t they more widely adopted already?</em>
+<ul>
+<li>Perhaps they need time to build network effects. The internet wasn’t built in a decade.</li>
+<li>Perhaps Cryptographic advances will make these economical.</li>
+</ul></li>
+<li><em>Cryptocurrencies are used for illegal activities.</em>
+<ul>
+<li><em>… such as Money Laundering</em>
+<ul>
+<li>This is be ameliorated by AML regulations on crypto entry points.</li>
+<li>Many crypto transactions are, in fact, easier for law enforcement to trace due to the public nature of the chain.
+<ul>
+<li><em>There are privacy techniques, even for Bitcoin, that eliminate traceability.</em>
+<ul>
+<li>Ok, so maybe we outlaw those.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>… such as Ransomware</em>
+<ul>
+<li><em>… such as The Colonial Pipeline</em>
+<ul>
+<li>The Bitcoin was eventually recovered</li>
+</ul></li>
+<li><em>… such as Britain’s NHS</em></li>
+<li>This could be helped instead by improving cybersecurity
+<ul>
+<li><em>But the attack surface is so big, we have no chance of eradicating it unless we attack crypto itself</em></li>
+</ul></li>
+</ul></li>
+<li><em>… such as Ponzi schemes.</em>
+<ul>
+<li><em>Some cryptocurrencies are Ponzi schemes by design, like BitConnect</em></li>
+<li><em>There’s even a PonziCoin, for Christ’s sake</em>
+<ul>
+<li>Is it really so bad if it’s transparent like this.</li>
+</ul></li>
+<li><em>Even cryptos not designed as scams are pumped and dumped</em>
+<ul>
+<li>See argument on naive buyers</li>
+</ul></li>
+<li>Well, the big Coins aren’t Ponzi schemes.
+<ul>
+<li><em>Naive buyers can still lose money on them</em>
+<ul>
+<li>Well they are irresponsible people. We crypto-lovers are libertarians, why should we ban crypto for everyone just because some people make dumb decisions?
+<ul>
+<li><em>This doesn’t mean they deserve to lose their life savings, as some have</em>
+<ul>
+<li>They might well have gambled their savings on some other investment if not crypto.
+<ul>
+<li><em>This is like saying gambling addicts are inevitably self destructive. But the fact that casinos engineer their interiors like mazes proves that a person’s decision to gamble can be influenced by factors like how easy it is to keep gambling. By providing yet another way to gamble, crypto is making self-destructive behavior more common.</em></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em><a href="https://web3isgoinggreat.com/?theme=hack">Smart contract bugs lose millions of dollars</a></em></li>
+<li><em>Any application developed on crypto will work better as a centralized service</em>
+<ul>
+<li><em>… because a SQL database will be more efficient than a many-times replicated store with a lot of cryptographic overhead</em></li>
+<li>Decentralization is good because it allows users to trust that the application will work, whereas a centralized service might go belly up or worse, lie about what it does.
+<ul>
+<li><em>Won’t there be a centralized service that gets a good enough reputation to be trustworthy, while still working better, especially if the service is valuable?</em>
+<ul>
+<li>For some applications where a very high level of trust is required, no amount of reputation is enough. ENS and finance are probably the best examples.
+<ul>
+<li><em>Don’t we get along fine with banks and DNS authorities today?</em>
+<ul>
+<li>Defending these things with crypto is better security-for-cost than a centralized server with high security.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>How can you say these systems are trustworthy when so many projects are scams or have bugs?</em>
+<ul>
+<li>If there’s a thorough audit of the code, and if the developers are trustworthy, there is nothing to fear.</li>
+<li>The best contracts, like uniswap, are simple at their core and are battle-tested, which gives us confidence in their security.</li>
+</ul></li>
+</ul></li>
+<li><em>… because blockchains are public and they can’t protect privacy</em>
+<ul>
+<li>Use MPC then.
+<ul>
+<li><em>Performance Issues</em></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>Cryptocurrencies have no intrinsic value</em>
+<ul>
+<li>Being money is itself useful</li>
+<li>Ethereum applications are useful, see those arguments.</li>
+<li>Even Bitcoin could be said to have the value of “letting you store data on the chain”. For example, there are services that allow you to hash your intellectual property to put onchain, which could (<em>ahem, hypothetically</em>) be useful in a court case.</li>
+</ul></li>
+<li><em>Bitcoin lost cannot be recovered and wallets are easy to lose/steal</em>
+<ul>
+<li>Use Multisig wallets/hardware wallets
+<ul>
+<li><em>These are harder to use</em></li>
+</ul></li>
+</ul></li>
+<li><em>Cryptocurrencies are highly volatile, and this makes them impractical as currency</em>
+<ul>
+<li>Use stablecoins then
+<ul>
+<li><em>Many stablecoins are not fully backed</em></li>
+<li><em>Some Fail spectacularly</em>
+<ul>
+<li>But DAI has done ok</li>
+</ul></li>
+</ul></li>
+<li>As more adoption comes, the price of L1 cryptocurrencies like BTC/ETH will even out.
+<ul>
+<li><em>How can we be sure it will ever even out enough to be usable?</em></li>
+</ul></li>
+<li><em>This victimizes some losers</em>
+<ul>
+<li>See argument on naive buyers</li>
+</ul></li>
+<li>This is a good thing! It means that there’s a non-correlated asset for hedge funds to de-risk their portfolios.
+<ul>
+<li><em>Just because crypto is volatile doesn’t mean it isn’t correlated.</em>
+<ul>
+<li>In theory, an asset only has to be a little non-correlated for it to be optimal to hold some.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>Scaling crypto is not technically feasible</em>
+<ul>
+<li>The success of Bitcoin and Ethereum so far is a good sign
+<ul>
+<li><em>Fees on these networks are too high</em>
+<ul>
+<li>Ethereum’s SNARK-wrapped vision is a good story, and <a href="https://ethereum.org/en/energy-consumption/">they estimate</a> 25000 tx/sec when fully upgraded.
+<ul>
+<li><em>Until we see that all this cryptography can be made to run this fast, I am skeptical of this claim</em></li>
+<li><em>Ethereum has had years to deliver on this and hasn’t even merged proof of stake yet</em>
+<ul>
+<li>They are trying - these protocols are very complex and take a lot of development effort</li>
+<li>Especially when trying to do them with a variety of clients.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>Proof-of-Work is bad</em>
+<ul>
+<li>See <a href="./pow-vs-pos-debate-tree.html">debate tree on PoW vs PoS</a>.</li>
+</ul></li>
+<li><em>High Cryptocurrency Fees make them impractical</em>
+<ul>
+<li>Technical upgrades may alleviate this for some currencies.</li>
+<li>Then why do people pay them?
+<ul>
+<li><em>Because they are idiots</em></li>
+</ul></li>
+</ul></li>
+<li><em>High Cryptocurrency latencies make them impractical</em>
+<ul>
+<li>Technical upgrades may alleviate this for some currencies.
+<ul>
+<li>… for example Bitcoin has the Lightning Network
+<ul>
+<li><em>See above on LN debate points</em></li>
+</ul></li>
+<li>… for example PoS
+<ul>
+<li><em>See complaints on PoS</em></li>
+</ul></li>
+<li>… for example sharding
+<ul>
+<li><em>Sharding provides less interoperability than single chain</em>
+<ul>
+<li>Debate technical merits of proposals</li>
+</ul></li>
+</ul></li>
+<li>… for example rollups
+<ul>
+<li><em>Sharding provides less security than L1</em>
+<ul>
+<li>Debate technical merits of proposals</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>High Cryptocurrency disk requirements make them impractical</em>
+<ul>
+<li><em>For example, <a href="https://ycharts.com/indicators/bitcoin_blockchain_size">the Bitcoin Blockchain</a> is, at time of writing, almost 400GB</em>
+<ul>
+<li>A pruned node is less large</li>
+</ul></li>
+<li>Technical upgrades may alleviate this for some currencies.
+<ul>
+<li>… for example statelessness
+<ul>
+<li><em>Statelessness forgets data, interrupts UX</em></li>
+</ul></li>
+<li>… for example FlyClient</li>
+</ul></li>
+</ul></li>
+<li><em>Chain forks compromise the validity of the currency</em>
+<ul>
+<li><em>See BTC/BCH/BSV or ETH/ETC</em>
+<ul>
+<li>In each of these cases, one fork became dominant.</li>
+</ul></li>
+</ul></li>
+<li><em>“<a href="https://www.neelc.org/posts/web3-centralized/">Web3 is centralized</a>, … MetaMask … OpenSea … APIs are central platforms.”</em>
+<ul>
+<li>MetaMask is a browser extension, presumably if people didn’t like a change to it, they could just use an old version of it.</li>
+</ul></li>
+</ul>
+</body>
+</html>

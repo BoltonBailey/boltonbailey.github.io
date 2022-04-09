@@ -11,6 +11,7 @@
       span.underline{text-decoration: underline;}
       div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
@@ -33,11 +34,11 @@
 <p>https://imgs.xkcd.com/comics/standards.png</p>
 <p>You might say that by supporting a new prover like this, I’m moving in the wrong direction. There will just be yet another prover to pick from and there will be less concentrated work on any one prover and progress as a whole will go down. Perhaps, but I take the optimistic view that Lean’s monorepo approach is a decisive factor that will make it easier to work with.</p>
 <h2 id="the-remaining-theorems">The remaining theorems</h2>
-<p>Here I list all the remaining theorems, lightly grouped by similarity, and roughly in order of how difficult I think they’ll be</p>
+<p>Here I list all the remaining theorems, lightly grouped by similarity, and roughly in order of how difficult I think they’ll be.</p>
 <h3 id="stirlings-formula">Stirling’s Formula</h3>
 <p>This is next for me after finishing Bertrand. I might like to do <a href="https://www-fourier.ujf-grenoble.fr/~marin/une_autre_crypto/articles_et_extraits_livres/Robbin_H.-A_remark_on_Stirling%5C&#39;s_Formula.pdf">Robbins’ version</a> of the explicit bound, since this seems useful.</p>
 <h3 id="minkowskis-fundamental-theorem">Minkowski’s Fundamental Theorem</h3>
-<p>This seems like another relatively easy one. The hardest part is the measure theory part of “there are two points that overlap when modding out by <span class="math inline">(2ℤ)<sup><em>n</em></sup></span>”. But even that should be a matter of cutting up the region, moving the pieces on top of the same square, and showing that if they don’t overlap, the resulting set has measure more than the it’s contained in.</p>
+<p>You Probably could complete this one in a few days, given a good understanding of mathlib. The hardest part is the measure theory part of “there are two points that overlap when modding out by <span class="math inline">\((2 \mathbb{Z})^n\)</span>”. But even that should be a matter of cutting up the region, moving the pieces on top of the same square, and showing that if they don’t overlap, the resulting set has measure more than the square it’s contained in.</p>
 <h3 id="induction">Induction</h3>
 <p>A few of these can be proved easily by induction on the construction of some mathematical object (or just on the naturals). These include:</p>
 <ul>
@@ -56,7 +57,9 @@
 <li>Morley’s Theorem</li>
 </ul>
 <p>These all have to do with properties of various geometric constructions including conics, lines and polygons. It strikes me that many of them could probably be solved by reducing them to an algebraic statement about the coordinates of the points and using some advanced algebraic tactic such as <a href="https://coq.inria.fr/refman/addendum/nsatz.html">nsatz</a>.</p>
-<h3 id="trancendental-numbers">Trancendental numbers</h3>
+<h3 id="divergence-of-the-prime-reciprocal-series">Divergence of the Prime Reciprocal Series</h3>
+<p>The wikipedia proof for this honestly doesn’t look too hard.</p>
+<h3 id="transcendental-numbers">Transcendental numbers</h3>
 <p>The Hermite-Lindemann Transcendence Theorem and “Pi is Transcendental” are highly related. The former implies the latter, which seems like a bit of an oversight. Whoever proves this, save yourself work by proving the general theorem first.</p>
 <h3 id="solving-polynomials">Solving Polynomials</h3>
 <p>“The Solution of a Cubic” and “The Solution of the General Quartic Equation” are both on the list. It seems pretty straightforward to just transcribe the solutions then simplify to prove they are zeros.</p>
@@ -64,6 +67,8 @@
 <p>“The Central Limit Theorem” and “The Laws of Large Numbers”. They both are some notion of limits of distributions, so they seem related.</p>
 <h3 id="eulers-formula">Euler’s Formula</h3>
 <p>Polyhedron Formula seems like a good target once there’s enough graph theory. The Number of Platonic Solids is a good followup.</p>
+<h3 id="brouwer-fixed-point-theorem">Brouwer Fixed Point Theorem</h3>
+<p>Seems tricky, most of the wikipedia proofs involve homology, complex analysis or some other advanced topic.</p>
 <h3 id="virgin-territory">Virgin Territory</h3>
 <p>Fermat’s Last Theorem, The Isoperimetric Theorem and the Fair Games Theorem have apparently never been formalized in <em>any</em> prover. FLT is obviously the gold standard (and to those of us formalists who have read Godel, Escher, Bach, it holds a special place in our heart). There is an effort in Lean to formalize a special case, so I’d say we’re on our way. The Isoperimetric Theorem strikes me as not too hard given the right multivariable calculus.</p>
 <h3 id="misc">Misc</h3>
@@ -76,12 +81,10 @@
 <li>Green’s Theorem</li>
 <li>The Four Color Problem</li>
 <li>Taylor’s Theorem</li>
-<li>Brouwer Fixed Point Theorem</li>
 <li>Puiseux’s Theorem</li>
 <li>The Partition Theorem</li>
 <li>Dirichlet’s Theorem</li>
 <li>Fourier Series</li>
-<li>Divergence of the Prime Reciprocal Series</li>
 <li>Buffon Needle Problem</li>
 </ul>
 </body>
