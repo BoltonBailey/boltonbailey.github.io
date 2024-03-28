@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>A File Format for Kitchen Recipes</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">A File Format for Kitchen Recipes</h1>
+<p class="date">2020-10-27T13:43:14-07:00</p>
+</header>
+<p>Those of us who cook will know the frustration of having to scroll to the end of a long food-blog post to get to the recipe. Additionally frustrating is the lack of a good way to save these recipes, forcing us to bookmark these pages and go through the scrolling process again and again. Promoting a standardized file format for these recipes would alleviate this problem, and make it easier to maintain a digital personal recipe book.</p>
+<p>I have no idea if such a file format exists. Regardless, I’m going to spitball a description of one now for the hell of it, based on toml.</p>
+<pre class="toml"><code>&lt;!-- Ingredients section always comes first, since shopping is the logical first step in preparing a recipe --&gt;
+[Ingredients]
+- [2](cups) Flour  &lt;!-- Ingredients are listed in [quantity](unit) format, to allow easier conversion between unit systems&gt;
+- [1-2](tsp) sugar &lt;!-- for optional amounts, indicate with a range&gt;
+- [0-1](tsp) cinnamon &lt;!-- for optional ingredients, indicate with a range going to 0&gt;
+- [2](tsp) cardamom &lt;!-- If a recipe calls for the same ingredient twice in the instructions (for example, a spice if put in a marinade and then later used again for finishing) then the total quantity needed should be summed up and included in a single line int eh recipe section&gt;
+- [0.5](lb) apple or pear &lt;!-- for an option between two ingredients use the form &quot;ingredient a or ingredient b&quot;&gt;
+- [1](lb) chicken thighs or Diced Chicken thighs 
+&lt;!-- For ingredients which can be bought in multiple ways, use &quot;or&quot; --&gt;
+
+[Timeline]
+&lt;!-- A basic timeline of the recipe including attended and unattended time --&gt;
+- 5 min prepare marinade
+- 30 min Marinate unattended
+- 30 min bake unattended
+
+[Instructions]
+- Preaheat oven to [300](F)
+- Dice Chicken Thighs
+- Dice fruit 
+- Add [2](cups) Flour, [1-2](tsp), [0-1](tsp), [1](tsp) cardamom, [0.5](lb) apple or pear, [1](lb) diced chicken to plastic bag
+&lt;!-- Repeat the amount, the user may not remember --&gt;
+&lt;!-- In particular, always be explicit about partial use of ingredient never &quot;half the cardamom&quot; always &quot;1tsp cardamom&quot;--&gt;
+- Marinate for 30 min
+- Bake for 30 min
+</code></pre>
+</body>
+</html>

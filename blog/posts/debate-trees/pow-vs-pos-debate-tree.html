@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>PoW-vs-PoS Debate Tree</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">PoW-vs-PoS Debate Tree</h1>
+<p class="date">2022-03-22T00:00:00-00:00</p>
+</header>
+<p>Related: <a href="crypto-debate-tree.html">Cryptocurrency debate tree</a>. This focuses on the debate within the cryptocurrency community about which consensus technology is better (though some arguments might relate to whether cryptocurrency itself is good or not on the whole).</p>
+<p>PoS arguments in normal typeface. <em>PoW arguments in italics.</em></p>
+<ul>
+<li>Proof-of-Work Cryptocurrencies hurt the environment
+<ul>
+<li><em>The <a href="#economics-of-mining">economics</a> make energy consumption tend to be green, as this flattens the duck curve.</em>
+<ul>
+<li>But it still increase demand for energy, which might lead to more carbon-based power plants to remain open.</li>
+</ul></li>
+<li><em>The “<a href="https://www.nickgrossman.xyz/2021/bitcoin-as-battery/">Bitcoin Mining is a Battery</a>” argument: Bitcoin is a way for countries like iceland that produce energy but can’t export it to do something useful with that energy.</em>
+<ul>
+<li>Why not do cloud computing instead?</li>
+<li>Why not smelt aluminum instead, as Iceland does currently?</li>
+</ul></li>
+<li><em>Does it really hurt the environment more than other things humans do? Why not outlaw those first?</em>
+<ul>
+<li><a href="https://www.bloomberg.com/opinion/articles/2021-01-26/is-bitcoin-mining-worth-the-environmental-cost">Annualized estimated carbon footprint of bitcoin is about 37 million tons of carbon dioxide.</a>. At <a href="https://www.blockchain.com/charts/n-transactions">300K transactions per day</a> = 100M per year, that’s 1/3 ton CO2 per transaction. That’s about the same as driving a car 600 miles.
+<ul>
+<li><em>Is that so bad? In the past the average transaction fee has been as high as ~50USD, which is about how much I pay to rent a car and drive it ~500 miles to see me grandparents. Am I bad for buying bitcoin, but not for visiting grandma?</em></li>
+</ul></li>
+<li><em>See also <a href="https://astralcodexten.substack.com/p/carbon-costs-quantified">this blog post</a>, suggesting bitcoin mining is better than car driving.</em>
+<ul>
+<li>That post admits that measure is hand-wavy. It uses CO2 cost to mine one bitcoin over the price of bitcoin.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>There are ideas for proof-of-useful-work, like PrimeCoin. One could use SNARKs to generalize this to other BOINC-like projects.</em>
+<ul>
+<li>PrimeCoin might help number theorists or something, but it’s not really that useful to the rest of humanity.</li>
+<li>The SNARK idea is interesting but not extant.</li>
+</ul></li>
+<li><em>Proof of Stake is broken</em>
+<ul>
+<li><em>The only security is through work</em>
+<ul>
+<li>I hear this slogan a lot, not sure what argument it’s trying to represent, if any.</li>
+</ul></li>
+<li>Do you deny that the BFT algorithms of the literature do what their papers prove they do?
+<ul>
+<li><em>Yes - these “proofs” are sometimes wrong or have flaws. See point on rigor below.</em></li>
+<li><em>No, but I doubt you can turn a BFT consensus into an efficient, working, PoS</em></li>
+</ul></li>
+</ul></li>
+<li><em>ASICs are harder to acquire than ETH, so Ethereum is easier to 51% attack</em>
+<ul>
+<li>Not sure why ASICs are harder to acquire. Isn’t X dollars of ASICs as easy to acquire as X dollars of ETH?
+<ul>
+<li><em>With ASICs, you buy them, but you also need expertise to set them up and buy electricity.</em></li>
+<li><em>Some DeFi organizations have huge amounts of ETH under their control already.</em></li>
+</ul></li>
+</ul></li>
+<li><em>ASICs are harder to acquire stealthily than ETH, so Ethereum is easier to 51% attack</em>
+<ul>
+<li>Interesting argument. Not sure if it stands up when you consider wait times between submitting stake and joining the staking pool.</li>
+</ul></li>
+<li><em>PoS is proof of wealth, and you are rewarded for participating with more wealth, so PoS systems naturally centralize</em>
+<ul>
+<li>Symmetric with argument below</li>
+</ul></li>
+<li>PoW is proof of ASICs, so PoW systems centralize around those who produce ASICs
+<ul>
+<li><em>Similar to above. We have a free market in these things, are we worried about someone cornering it?</em></li>
+</ul></li>
+<li><em>Because PoS has large minimum deposits, the system centralizes</em> (thanks Kyle Soska for this line of argument)
+<ul>
+<li>51% Bitcoin PoW is controlled by the top 3 pools
+<ul>
+<li><em>But these are just pools, the miners can switch if a pool misbehaves</em>
+<ul>
+<li>But <a href="https://www.riotblockchain.com/">Riot Blockchain</a> is a mining company claiming to have 1.5% of network hashrate. So you can probably only criticize PoS if the biggest validator is larger than this.</li>
+<li>There are plans for PoS validators to be able to pool.</li>
+</ul></li>
+</ul></li>
+<li>Does it really centralize enough for a 34% attack to be a risk?</li>
+</ul></li>
+<li><a href="https://news.ycombinator.com/item?id=28073297"><em>PoS is permissioned</em></a>
+<ul>
+<li><em>“… you need permission from an existing player in order to start playing”</em>
+<ul>
+<li>In order to mine bitcoin, don’t you need permission of a chip manufacturer?
+<ul>
+<li><em>No, you can in principle build a chip plant yourself</em>
+<ul>
+<li>We are talking about such huge quantities of capital at this point, it seems unreasonable to draw a distinction.</li>
+</ul></li>
+</ul></li>
+<li>Even if this isn’t true for Bitcoin, is it so bad that it’s true for PoS? Are we really worried that we will find no one to sell us ETH?
+<ul>
+<li><em>The issue is that one entity might monopolize the ETH staking supply</em>
+<ul>
+<li>Sounds like you’re worried about a 51% attack (see above), not permissionlessness.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>Protocol-level security research is unrigorous</em>
+<ul>
+<li><em>See <a href="https://arxiv.org/abs/2110.10086">this paper</a> which refined vulnerabilities found <a href="https://arxiv.org/abs/2102.02247">here</a> and <a href="https://ethresear.ch/t/a-balancing-attack-on-gasper-the-current-candidate-for-eth2s-beacon-chain/8079">here</a>. With two separate attacks, and EF promising a merge by July 2022, how confident really are we in the security of all this?</em>
+<ul>
+<li>I guess I sort of buy this, I tried to read the original Casper paper and wasn’t able to get it.
+<ul>
+<li>The best I can say is that it seems like in principle, PoS should be possible. Even if Ethereum jumps the gun and has a catastrophic failure, that doesn’t mean PoS isn’t the best way of doing things.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><em>PoS is insecure against Long Range Fork Attacks</em>
+<ul>
+<li>To carry out a Long-Range Fork Attack, you need to do the bribing, and find someone with an Ethereum client that doesn’t have a recent block hard-coded.
+<ul>
+<li><em>By hard-coding a block, you introduce centralization</em>
+<ul>
+<li>This is a dumb argument. Someone writes code to make a cryptocurrency client, and unless you vet all that code yourself, you trust them anyway.</li>
+</ul></li>
+<li><em>What if a node is down for 6 months?</em>
+<ul>
+<li>Maybe we can warn the user that the client won’t work until the user goes to reddit or ethereum.org to find a recent hash.
+<ul>
+<li><em>This is centralization</em>
+<ul>
+<li>The point is they can go to either reddit or ethereum.org or both, no one place has the power to trick you.</li>
+</ul></li>
+<li><em>While not a disaster, this is bad UI</em></li>
+<li><em>What if the node is on an embedded device and can’t ask for user input</em>
+<ul>
+<li>True. Seems like an edge case though.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>When you do proof of work, some of the money you pay for security is, in a sense, “wasted” on electricity. PoS gives you more security per block reward.
+<ul>
+<li><em>Can’t you say that PoS is wasting a comparable amount in the opportunity cost of staked tokens?</em></li>
+</ul></li>
+<li>PoS is fundamentally more secure because it asks stakers to risk their tokens for the chain they support. If they misbehave, they lose their tokens, whereas PoW misbehavers keep their ASICs.</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Image Generator</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Image Generator</h1>
+<p class="date">2020-03-22T21:46:54-05:00</p>
+</header>
+<p>This project contains code to generate visually interesting images based off of recurrence relations. The core file is <a href="./imagegenerator.py">imagegenerator.py</a>, which converts mathematical functions from the plane to colors into image files. I made a few files that use this framework.</p>
+<p>TODO links to pictures</p>
+<h2 id="smooth-mandelbrot">Smooth Mandelbrot</h2>
+<p>The <a href="./mandelbrot.py">mandelbrot.py</a> file contains code for generating images of the Mandelbrot set. Unlike many other Mandelbrot image generators, this one produces images which are <em>smooth</em>, as I explain below.</p>
+<figure>
+<img src="images/mandelbrot_288_180.png" alt="An image of the Mandelbrot set I generated." /><figcaption>An image of the Mandelbrot set I generated.</figcaption>
+</figure>
+<p>Start by recalling the following theorem:</p>
+<p><strong>Theorem:</strong> Any Mandelbrot iteration which ever escapes the critical radius of 2 diverges.</p>
+<p><strong>Proof:</strong> For any Mandelbrot iteration with parameter <span class="math inline">\(c\)</span>, if <span class="math inline">\(|z_i|^2 - |c| &gt; |z_i|\)</span>, then one can easily see that <span class="math inline">\(|z_{i+k}|\)</span> is strictly increasing without bound for positive <span class="math inline">\(k\)</span>. If <span class="math inline">\(|z_i| &gt; 2\)</span>, then either <span class="math inline">\(|c| \le 2\)</span> and the inequality holds for <span class="math inline">\(z_i\)</span>, or <span class="math inline">\(|c| &gt; 2\)</span> and the inequality holds for <span class="math inline">\(z_0\)</span>.</p>
+<p>Note also that 2 is the lowest constant for which this fact holds, since <span class="math inline">\(-2\)</span> is in the Mandelbrot set. This theorem is useful for computer generating images of the set, since we can stop the iteration once we exceed the critical radius.</p>
+<p>Because of this, a typical Mandelbrot rendering might color the complement of the Mandelbrot according to the iteration in which the sequence escapes the critical radius. This leads to a coloring with noticeable edges between zones. But you’ll notice my image has a nice smooth color gradient. To get this, we color according to a quantity that is continuous on the complement of the Mandelbrot set.</p>
+<p>A good candidate for this is the limit: <span class="math display">\[\lim_{i \to \infty}  \log(|z_i|) / 2^i\]</span> This sequence converges whenever the Mandelbrot iteration <span class="math inline">\(z_i\)</span> diverges. This can be seen by analyzing the difference between adjacent terms <span class="math display">\[\log(|z_i^2 + c|) / 2^{i+1} - \log(|z_i|) / 2^i\]</span> <span class="math display">\[= 1/2^{i+1} (\log(|z_i^2 + c|) - 2\log(|z_i|))\]</span> <span class="math display">\[= 1/2^{i+1} (\log(|z_i^2 + c|/|z_i|^2))\]</span> <span class="math display">\[= 1/2^{i+1} (\log(|(z_i^2 + c)/(z_i)^2|))\]</span> <span class="math display">\[= 1/2^{i+1} (\log(|1 + c/z_i^2|))\]</span> which decreases exponentially with <span class="math inline">\(i\)</span> once <span class="math inline">\(z_i\)</span> has sufficiently large magnitude.</p>
+<p>The nice thing about this limit as a basis for a plot of the Mandelbrot complement is that we can define a “pseudo escape iteration” <span class="math inline">\(i_{escape}\)</span> by setting <span class="math display">\[\lim_{i\to \infty} \log(|z_i|) / 2^i = \log(2) / 2^i_{escape}\]</span> The quantity <span class="math inline">\(i_{escape}\)</span> can be thought of as the iteration at which we hit <span class="math inline">\(|z_{i_{escape}}| = 2\)</span> making the fictitious assumption that the sequence <span class="math inline">\(\log(|z_i|) / 2^i\)</span> does not only converge, but is constant. To approximate <span class="math inline">\(i_{escape}\)</span> computationally, we approximate the limit by <span class="math inline">\(\log(|z_{i^*}|) / 2^{i^*}\)</span> for <span class="math inline">\(|z_{i^*}|\)</span> large (in my code, <span class="math inline">\(i^*\)</span> is the first <span class="math inline">\(i\)</span> for which <span class="math inline">\(|z_i| &gt; 50\)</span>) <span class="math display">\[\log(|z_{i^*}|) / 2^{i^*} = \log(2) / 2^i_{escape}\]</span> <span class="math display">\[\log_2(|z_{i^*}|) / 2^{i^*} = 1 / 2^i_{escape}\]</span> <span class="math display">\[i_{escape} = -\log_2(\log_2(|z_{i^*}|) / 2^{i^*})\]</span> <span class="math display">\[i_{escape} = {i^*} - \log_2(\log_2(|z_{i^*}|))\]</span></p>
+<h2 id="mandelbrot-computable-version">Mandelbrot (Computable Version)</h2>
+<p>I have <a href="computablemandelbrot.py">another Mandelbrot image generation file</a> in this directory, which is more focused on computationally proving that given regions of the plane are contained in, or disjoint from, the Mandelbrot set.</p>
+<h2 id="sandpile">Sandpile</h2>
+<p>The <a href="sandpile.py" class="uri">sandpile.py</a> file contains code for generating <a href="https://en.wikipedia.org/wiki/Abelian_sandpile_model#Sandpile_models_on_infinite_grids">Abelian sandpiles</a>. Here is a GIF of sand being dropped onto the pile one at a time.</p>
+<p><img src="images/sandpile/sandpile.gif" /></p>
+</body>
+</html>

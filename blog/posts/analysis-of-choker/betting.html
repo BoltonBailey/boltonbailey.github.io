@@ -1,0 +1,8899 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Analysis of Choker, Part 1: The Betting</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Analysis of Choker, Part 1: The Betting</h1>
+<p class="date">2020-05-19T21:45:47-05:00</p>
+</header>
+<p>This post analyzes the game <a href="https://chokergame.com/">Choker</a>, which combines elements of chess and poker. The full rules are <a href="https://chokergame.com/rules/">here</a>. A visual explanation is given by <a href="https://chokergame.com/wp-content/uploads/2019/01/2-page-app-rules.pdf">this pdf</a> (though this one doesn’t fully explain what happens if three queens and two rooks are dealt). This post explicitly deals with the betting stage of a choker hand. I also want to analyze the [placement and chess]({{&lt;relref “./placement-and-chess.html”&gt;}}) phase, but for now, this is a TODO.</p>
+<h2 id="observations-on-the-possible-piece-sets">Observations on the Possible Piece Sets</h2>
+<p>The order in which cards are dealt does not matter with respect to the piece set entering the placement phase. There are five types of pieces, any combination of which can be dealt (with the exception of five queens, since there are only 4 queens in the deck). By stars and bars, there are therefore <span class="math inline">\(\binom{5 + 4}{5} - 1 = 125\)</span> distinct hands. The Promotion, Demotion, Palace and Empress rules restrict the number of piece sets to 48 (or 47, see the “Becket Variation”).</p>
+<p>Obviously important is the number of <a href="https://en.wikipedia.org/wiki/Chess_piece_relative_value">points</a> in the final hand, since the hand with more points will usually win.</p>
+<p>My programmatic analysis (<a href="choker.py">code</a> <a href="analysis.py">here</a>) of the hands and their point values can be found in the <a href="#tables">tables</a> section. Some summary statistics:</p>
+<ul>
+<li>The mean point value is about 17.2, and the median is 17.</li>
+<li>The smallest point value is 9, from a minor piece and four pawns (by demotion).</li>
+<li>The largest point value is 29, from A Queen-Rook Empress or a Palace.</li>
+</ul>
+<h2 id="flop-analysis">Flop Analysis</h2>
+<p>It is also expedient to analyze the 15 possible flops in terms of expected points, and more carefully in terms of the distribution of final scores.</p>
+<p>Below are the summary statistics, in order of mean score.</p>
+<ul>
+<li>For flop QR The average score is 22.0, and the standard deviation is 3.0</li>
+<li>For flop QB The average score is 20.2, and the standard deviation is 3.59</li>
+<li>For flop QN The average score is 20.2, and the standard deviation is 3.59</li>
+<li>For flop QP The average score is 19.5, and the standard deviation is 3.01</li>
+<li>For flop RR The average score is 18.6, and the standard deviation is 3.58</li>
+<li>For flop QQ The average score is 18.3, and the standard deviation is 2.69</li>
+<li>For flop RB The average score is 17.6, and the standard deviation is 4.29</li>
+<li>For flop RN The average score is 17.6, and the standard deviation is 4.29</li>
+<li>For flop PP The average score is 17.4, and the standard deviation is 3.5</li>
+<li>For flop RP The average score is 17.2, and the standard deviation is 3.58</li>
+<li>For flop BN The average score is 15.9, and the standard deviation is 4.47</li>
+<li>For flop BB The average score is 15.8, and the standard deviation is 3.76</li>
+<li>For flop NN The average score is 15.8, and the standard deviation is 3.76</li>
+<li>For flop BP The average score is 15.5, and the standard deviation is 3.46</li>
+<li>For flop NP The average score is 15.5, and the standard deviation is 3.46</li>
+</ul>
+<p>A few observations:</p>
+<ul>
+<li>The Pawn-Pawn opener is actually an <strong>above-average hand</strong> in terms of points, due to the likelihood of one or multiple promotions in the subsequent draws. In fact, it’s even better than Rook-Pawn, presumably because at least one promotion is so likely and a second promotion queen is worth a lot.</li>
+<li>The worst opener on average is Pawn-Minor (minor pieces are interchangeable in terms of score).</li>
+<li>The best openers, as one might expect, are Queen-Rook and Queen-Minor, since Queen-Queen is a demotion.</li>
+</ul>
+<hr />
+<h2 id="tables">Tables</h2>
+<h3 id="statistics-for-all-hands">Statistics for All Hands</h3>
+<h4 id="hand-statistics-table">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQQR</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.001%</td>
+</tr>
+<tr class="even">
+<td>QQQQB</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.001%</td>
+</tr>
+<tr class="odd">
+<td>QQQQN</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.001%</td>
+</tr>
+<tr class="even">
+<td>QQQQP</td>
+<td>QPPPP</td>
+<td>13</td>
+<td>0.001%</td>
+</tr>
+<tr class="odd">
+<td>QQQRR</td>
+<td>QQRRP</td>
+<td>29</td>
+<td>0.010%</td>
+</tr>
+<tr class="even">
+<td>QQQRB</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>0.024%</td>
+</tr>
+<tr class="odd">
+<td>QQQRN</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>0.024%</td>
+</tr>
+<tr class="even">
+<td>QQQRP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.047%</td>
+</tr>
+<tr class="odd">
+<td>QQQBB</td>
+<td>QQBBP</td>
+<td>25</td>
+<td>0.010%</td>
+</tr>
+<tr class="even">
+<td>QQQBN</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>0.024%</td>
+</tr>
+<tr class="odd">
+<td>QQQBP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.047%</td>
+</tr>
+<tr class="even">
+<td>QQQNN</td>
+<td>QQNNP</td>
+<td>25</td>
+<td>0.010%</td>
+</tr>
+<tr class="odd">
+<td>QQQNP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.047%</td>
+</tr>
+<tr class="even">
+<td>QQQPP</td>
+<td>QQPPP</td>
+<td>21</td>
+<td>0.044%</td>
+</tr>
+<tr class="odd">
+<td>QQRRR</td>
+<td>QQRRP</td>
+<td>29</td>
+<td>0.031%</td>
+</tr>
+<tr class="even">
+<td>QQRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>0.124%</td>
+</tr>
+<tr class="odd">
+<td>QQRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>0.124%</td>
+</tr>
+<tr class="even">
+<td>QQRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.248%</td>
+</tr>
+<tr class="odd">
+<td>QQRBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>0.124%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>QRBNP</td>
+<td>21</td>
+<td>0.283%</td>
+</tr>
+<tr class="odd">
+<td>QQRBP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>0.566%</td>
+</tr>
+<tr class="even">
+<td>QQRNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>0.124%</td>
+</tr>
+<tr class="odd">
+<td>QQRNP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>0.566%</td>
+</tr>
+<tr class="even">
+<td>QQRPP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.530%</td>
+</tr>
+<tr class="odd">
+<td>QQBBB</td>
+<td>QQBBP</td>
+<td>25</td>
+<td>0.031%</td>
+</tr>
+<tr class="even">
+<td>QQBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>0.124%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.248%</td>
+</tr>
+<tr class="even">
+<td>QQBNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>0.124%</td>
+</tr>
+<tr class="odd">
+<td>QQBNP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>0.566%</td>
+</tr>
+<tr class="even">
+<td>QQBPP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.530%</td>
+</tr>
+<tr class="odd">
+<td>QQNNN</td>
+<td>QQNNP</td>
+<td>25</td>
+<td>0.031%</td>
+</tr>
+<tr class="even">
+<td>QQNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.248%</td>
+</tr>
+<tr class="odd">
+<td>QQNPP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.530%</td>
+</tr>
+<tr class="even">
+<td>QQPPP</td>
+<td>QQPPP</td>
+<td>21</td>
+<td>0.309%</td>
+</tr>
+<tr class="odd">
+<td>QRRRR</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.026%</td>
+</tr>
+<tr class="even">
+<td>QRRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>0.165%</td>
+</tr>
+<tr class="odd">
+<td>QRRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>0.165%</td>
+</tr>
+<tr class="even">
+<td>QRRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.330%</td>
+</tr>
+<tr class="odd">
+<td>QRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>0.289%</td>
+</tr>
+<tr class="even">
+<td>QRRBN</td>
+<td>QRRBN</td>
+<td>25</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>1.320%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>0.289%</td>
+</tr>
+<tr class="odd">
+<td>QRRNP</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>1.320%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>1.238%</td>
+</tr>
+<tr class="odd">
+<td>QRBBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>0.165%</td>
+</tr>
+<tr class="even">
+<td>QRBBN</td>
+<td>QRBBN</td>
+<td>23</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>1.320%</td>
+</tr>
+<tr class="even">
+<td>QRBNN</td>
+<td>QRBNN</td>
+<td>23</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>3.017%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>2.829%</td>
+</tr>
+<tr class="odd">
+<td>QRNNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>0.165%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>1.320%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>2.829%</td>
+</tr>
+<tr class="even">
+<td>QRPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>1.650%</td>
+</tr>
+<tr class="odd">
+<td>QBBBB</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.026%</td>
+</tr>
+<tr class="even">
+<td>QBBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>0.165%</td>
+</tr>
+<tr class="odd">
+<td>QBBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.330%</td>
+</tr>
+<tr class="even">
+<td>QBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>0.289%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>1.320%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>1.238%</td>
+</tr>
+<tr class="odd">
+<td>QBNNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>0.165%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>1.320%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>2.829%</td>
+</tr>
+<tr class="even">
+<td>QBPPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>1.650%</td>
+</tr>
+<tr class="odd">
+<td>QNNNN</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.026%</td>
+</tr>
+<tr class="even">
+<td>QNNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.330%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>1.238%</td>
+</tr>
+<tr class="even">
+<td>QNPPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>1.650%</td>
+</tr>
+<tr class="odd">
+<td>QPPPP</td>
+<td>QQRPP</td>
+<td>25</td>
+<td>0.670%</td>
+</tr>
+<tr class="even">
+<td>RRRRR</td>
+<td>RRPPP</td>
+<td>13</td>
+<td>0.005%</td>
+</tr>
+<tr class="odd">
+<td>RRRRB</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>0.052%</td>
+</tr>
+<tr class="even">
+<td>RRRRN</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>0.052%</td>
+</tr>
+<tr class="odd">
+<td>RRRRP</td>
+<td>RRPPP</td>
+<td>13</td>
+<td>0.103%</td>
+</tr>
+<tr class="even">
+<td>RRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>0.144%</td>
+</tr>
+<tr class="odd">
+<td>RRRBN</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>0.330%</td>
+</tr>
+<tr class="even">
+<td>RRRBP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>RRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>0.144%</td>
+</tr>
+<tr class="even">
+<td>RRRNP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>RRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.619%</td>
+</tr>
+<tr class="even">
+<td>RRBBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>0.144%</td>
+</tr>
+<tr class="odd">
+<td>RRBBN</td>
+<td>RRBBN</td>
+<td>19</td>
+<td>0.578%</td>
+</tr>
+<tr class="even">
+<td>RRBBP</td>
+<td>RRBBP</td>
+<td>17</td>
+<td>1.155%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>RRBNN</td>
+<td>19</td>
+<td>0.578%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>2.640%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>2.475%</td>
+</tr>
+<tr class="even">
+<td>RRNNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>0.144%</td>
+</tr>
+<tr class="odd">
+<td>RRNNP</td>
+<td>RRNNP</td>
+<td>17</td>
+<td>1.155%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>2.475%</td>
+</tr>
+<tr class="odd">
+<td>RRPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>1.444%</td>
+</tr>
+<tr class="even">
+<td>RBBBB</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>0.052%</td>
+</tr>
+<tr class="odd">
+<td>RBBBN</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>0.330%</td>
+</tr>
+<tr class="even">
+<td>RBBBP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>RBBNN</td>
+<td>17</td>
+<td>0.578%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>2.640%</td>
+</tr>
+<tr class="odd">
+<td>RBBPP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>2.475%</td>
+</tr>
+<tr class="even">
+<td>RBNNN</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>0.330%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>2.640%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>5.657%</td>
+</tr>
+<tr class="odd">
+<td>RBPPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>3.300%</td>
+</tr>
+<tr class="even">
+<td>RNNNN</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>0.052%</td>
+</tr>
+<tr class="odd">
+<td>RNNNP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>0.660%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>2.475%</td>
+</tr>
+<tr class="odd">
+<td>RNPPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>3.300%</td>
+</tr>
+<tr class="even">
+<td>RPPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>1.341%</td>
+</tr>
+<tr class="odd">
+<td>BBBBB</td>
+<td>BBPPP</td>
+<td>9</td>
+<td>0.005%</td>
+</tr>
+<tr class="even">
+<td>BBBBN</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>0.052%</td>
+</tr>
+<tr class="odd">
+<td>BBBBP</td>
+<td>BBPPP</td>
+<td>9</td>
+<td>0.103%</td>
+</tr>
+<tr class="even">
+<td>BBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>0.144%</td>
+</tr>
+<tr class="odd">
+<td>BBBNP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>0.660%</td>
+</tr>
+<tr class="even">
+<td>BBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.619%</td>
+</tr>
+<tr class="odd">
+<td>BBNNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>0.144%</td>
+</tr>
+<tr class="even">
+<td>BBNNP</td>
+<td>BBNNP</td>
+<td>13</td>
+<td>1.155%</td>
+</tr>
+<tr class="odd">
+<td>BBNPP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>2.475%</td>
+</tr>
+<tr class="even">
+<td>BBPPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>1.444%</td>
+</tr>
+<tr class="odd">
+<td>BNNNN</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>0.052%</td>
+</tr>
+<tr class="even">
+<td>BNNNP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>2.475%</td>
+</tr>
+<tr class="even">
+<td>BNPPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>3.300%</td>
+</tr>
+<tr class="odd">
+<td>BPPPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>1.341%</td>
+</tr>
+<tr class="even">
+<td>NNNNN</td>
+<td>NNPPP</td>
+<td>9</td>
+<td>0.005%</td>
+</tr>
+<tr class="odd">
+<td>NNNNP</td>
+<td>NNPPP</td>
+<td>9</td>
+<td>0.103%</td>
+</tr>
+<tr class="even">
+<td>NNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.619%</td>
+</tr>
+<tr class="odd">
+<td>NNPPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>1.444%</td>
+</tr>
+<tr class="even">
+<td>NPPPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>1.341%</td>
+</tr>
+<tr class="odd">
+<td>PPPPP</td>
+<td>QQRPP</td>
+<td>25</td>
+<td>0.402%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 17.208764576319886, and the standard deviation is 4.035608836308754</p>
+<h4 id="point-distribution-table">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.217%</td>
+<td>99.783%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.217%</td>
+<td>6.373%</td>
+<td>93.410%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>6.590%</td>
+<td>16.596%</td>
+<td>76.814%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>23.186%</td>
+<td>20.071%</td>
+<td>56.744%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>43.256%</td>
+<td>17.661%</td>
+<td>39.083%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>60.917%</td>
+<td>17.190%</td>
+<td>21.892%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>78.108%</td>
+<td>11.326%</td>
+<td>10.566%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>89.434%</td>
+<td>4.538%</td>
+<td>6.029%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>93.971%</td>
+<td>2.970%</td>
+<td>3.059%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>96.941%</td>
+<td>0.000%</td>
+<td>3.059%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>96.941%</td>
+<td>3.059%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.001%</td>
+</tr>
+<tr class="even">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.001%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.001%</td>
+</tr>
+<tr class="even">
+<td>QPPPP</td>
+<td>13</td>
+<td>0.001%</td>
+</tr>
+<tr class="odd">
+<td>QQRRP</td>
+<td>29</td>
+<td>0.010%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>0.024%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>0.024%</td>
+</tr>
+<tr class="even">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.047%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>25</td>
+<td>0.010%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>0.024%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.047%</td>
+</tr>
+<tr class="even">
+<td>QQNNP</td>
+<td>25</td>
+<td>0.010%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.047%</td>
+</tr>
+<tr class="even">
+<td>QQPPP</td>
+<td>21</td>
+<td>0.044%</td>
+</tr>
+<tr class="odd">
+<td>QQRRP</td>
+<td>29</td>
+<td>0.031%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>0.124%</td>
+</tr>
+<tr class="odd">
+<td>QRRNP</td>
+<td>23</td>
+<td>0.124%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.248%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>21</td>
+<td>0.124%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>21</td>
+<td>0.283%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>0.566%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>0.124%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>0.566%</td>
+</tr>
+<tr class="even">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.530%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>25</td>
+<td>0.031%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>0.124%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.248%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>19</td>
+<td>0.124%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>0.566%</td>
+</tr>
+<tr class="even">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.530%</td>
+</tr>
+<tr class="odd">
+<td>QQNNP</td>
+<td>25</td>
+<td>0.031%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.248%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.530%</td>
+</tr>
+<tr class="even">
+<td>QQPPP</td>
+<td>21</td>
+<td>0.309%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.026%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>0.165%</td>
+</tr>
+<tr class="odd">
+<td>QRRNP</td>
+<td>23</td>
+<td>0.165%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.330%</td>
+</tr>
+<tr class="odd">
+<td>QRRBB</td>
+<td>25</td>
+<td>0.289%</td>
+</tr>
+<tr class="even">
+<td>QRRBN</td>
+<td>25</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>23</td>
+<td>1.320%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>25</td>
+<td>0.289%</td>
+</tr>
+<tr class="odd">
+<td>QRRNP</td>
+<td>23</td>
+<td>1.320%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>1.238%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>21</td>
+<td>0.165%</td>
+</tr>
+<tr class="even">
+<td>QRBBN</td>
+<td>23</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>21</td>
+<td>1.320%</td>
+</tr>
+<tr class="even">
+<td>QRBNN</td>
+<td>23</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>QQRBN</td>
+<td>29</td>
+<td>3.017%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>2.829%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>21</td>
+<td>0.165%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>1.320%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>2.829%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>1.650%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.026%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>0.165%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.330%</td>
+</tr>
+<tr class="even">
+<td>QBBNN</td>
+<td>21</td>
+<td>0.289%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>19</td>
+<td>1.320%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>1.238%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>0.165%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>19</td>
+<td>1.320%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>2.829%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>1.650%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.026%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.330%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>1.238%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>1.650%</td>
+</tr>
+<tr class="odd">
+<td>QQRPP</td>
+<td>25</td>
+<td>0.670%</td>
+</tr>
+<tr class="even">
+<td>RRPPP</td>
+<td>13</td>
+<td>0.005%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>0.052%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>0.052%</td>
+</tr>
+<tr class="odd">
+<td>RRPPP</td>
+<td>13</td>
+<td>0.103%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>25</td>
+<td>0.144%</td>
+</tr>
+<tr class="odd">
+<td>RRBNP</td>
+<td>17</td>
+<td>0.330%</td>
+</tr>
+<tr class="even">
+<td>RRBPP</td>
+<td>15</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>QRRNN</td>
+<td>25</td>
+<td>0.144%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.619%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>25</td>
+<td>0.144%</td>
+</tr>
+<tr class="odd">
+<td>RRBBN</td>
+<td>19</td>
+<td>0.578%</td>
+</tr>
+<tr class="even">
+<td>RRBBP</td>
+<td>17</td>
+<td>1.155%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>19</td>
+<td>0.578%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>17</td>
+<td>2.640%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>2.475%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>25</td>
+<td>0.144%</td>
+</tr>
+<tr class="odd">
+<td>RRNNP</td>
+<td>17</td>
+<td>1.155%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>2.475%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>1.444%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>0.052%</td>
+</tr>
+<tr class="odd">
+<td>RBBNP</td>
+<td>15</td>
+<td>0.330%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>17</td>
+<td>0.578%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>15</td>
+<td>2.640%</td>
+</tr>
+<tr class="odd">
+<td>RBBPP</td>
+<td>13</td>
+<td>2.475%</td>
+</tr>
+<tr class="even">
+<td>RBNNP</td>
+<td>15</td>
+<td>0.330%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>15</td>
+<td>2.640%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>13</td>
+<td>5.657%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>3.300%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>13</td>
+<td>0.052%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>13</td>
+<td>0.660%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>13</td>
+<td>2.475%</td>
+</tr>
+<tr class="odd">
+<td>RRNPP</td>
+<td>15</td>
+<td>3.300%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>1.341%</td>
+</tr>
+<tr class="odd">
+<td>BBPPP</td>
+<td>9</td>
+<td>0.005%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>11</td>
+<td>0.052%</td>
+</tr>
+<tr class="odd">
+<td>BBPPP</td>
+<td>9</td>
+<td>0.103%</td>
+</tr>
+<tr class="even">
+<td>QBBNN</td>
+<td>21</td>
+<td>0.144%</td>
+</tr>
+<tr class="odd">
+<td>BBNPP</td>
+<td>11</td>
+<td>0.660%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.619%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>21</td>
+<td>0.144%</td>
+</tr>
+<tr class="even">
+<td>BBNNP</td>
+<td>13</td>
+<td>1.155%</td>
+</tr>
+<tr class="odd">
+<td>BBNPP</td>
+<td>11</td>
+<td>2.475%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>1.444%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>11</td>
+<td>0.052%</td>
+</tr>
+<tr class="even">
+<td>BNNPP</td>
+<td>11</td>
+<td>0.660%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>11</td>
+<td>2.475%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>13</td>
+<td>3.300%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>1.341%</td>
+</tr>
+<tr class="even">
+<td>NNPPP</td>
+<td>9</td>
+<td>0.005%</td>
+</tr>
+<tr class="odd">
+<td>NNPPP</td>
+<td>9</td>
+<td>0.103%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.619%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>1.444%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>1.341%</td>
+</tr>
+<tr class="odd">
+<td>QQRPP</td>
+<td>25</td>
+<td>0.402%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-qq">Statistics for Flop: QQ</h3>
+<h4 id="hand-statistics-table-1">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQQR</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.070%</td>
+</tr>
+<tr class="even">
+<td>QQQQB</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.070%</td>
+</tr>
+<tr class="odd">
+<td>QQQQN</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.070%</td>
+</tr>
+<tr class="even">
+<td>QQQQP</td>
+<td>QPPPP</td>
+<td>13</td>
+<td>0.139%</td>
+</tr>
+<tr class="odd">
+<td>QQQRR</td>
+<td>QQRRP</td>
+<td>29</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QQQRB</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>1.115%</td>
+</tr>
+<tr class="odd">
+<td>QQQRN</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>1.115%</td>
+</tr>
+<tr class="even">
+<td>QQQRP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>QQQBB</td>
+<td>QQBBP</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QQQBN</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>1.115%</td>
+</tr>
+<tr class="odd">
+<td>QQQBP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QQQNN</td>
+<td>QQNNP</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QQQNP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QQQPP</td>
+<td>QQPPP</td>
+<td>21</td>
+<td>2.091%</td>
+</tr>
+<tr class="odd">
+<td>QQRRR</td>
+<td>QQRRP</td>
+<td>29</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QQRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QQRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QQRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QQRBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>QRBNP</td>
+<td>21</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QQRBP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>8.920%</td>
+</tr>
+<tr class="even">
+<td>QQRNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QQRNP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>8.920%</td>
+</tr>
+<tr class="even">
+<td>QQRPP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QQBBB</td>
+<td>QQBBP</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QQBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QQBNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QQBNP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>8.920%</td>
+</tr>
+<tr class="even">
+<td>QQBPP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QQNNN</td>
+<td>QQNNP</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QQNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QQNPP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QQPPP</td>
+<td>QQPPP</td>
+<td>21</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 18.32404181184669, and the standard deviation is 2.686437813106279</p>
+<h4 id="point-distribution-table-1">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>0.000%</td>
+<td>0.139%</td>
+<td>99.861%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>0.139%</td>
+<td>21.324%</td>
+<td>78.537%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>21.463%</td>
+<td>28.502%</td>
+<td>50.035%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>49.965%</td>
+<td>23.972%</td>
+<td>26.063%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>73.937%</td>
+<td>19.233%</td>
+<td>6.829%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>93.171%</td>
+<td>3.902%</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>97.073%</td>
+<td>1.951%</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>99.024%</td>
+<td>0.000%</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>99.024%</td>
+<td>0.976%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-1">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.070%</td>
+</tr>
+<tr class="even">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.070%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.070%</td>
+</tr>
+<tr class="even">
+<td>QPPPP</td>
+<td>13</td>
+<td>0.139%</td>
+</tr>
+<tr class="odd">
+<td>QQRRP</td>
+<td>29</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>1.115%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>1.115%</td>
+</tr>
+<tr class="even">
+<td>QRPPP</td>
+<td>17</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>1.115%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>15</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QQNNP</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QQPPP</td>
+<td>21</td>
+<td>2.091%</td>
+</tr>
+<tr class="odd">
+<td>QQRRP</td>
+<td>29</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRNP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>21</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>8.920%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>8.920%</td>
+</tr>
+<tr class="even">
+<td>QRPPP</td>
+<td>17</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>8.920%</td>
+</tr>
+<tr class="even">
+<td>QBPPP</td>
+<td>15</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QQNNP</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QQPPP</td>
+<td>21</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-qr">Statistics for Flop: QR</h3>
+<h4 id="hand-statistics-table-2">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQQR</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.009%</td>
+</tr>
+<tr class="even">
+<td>QQQRR</td>
+<td>QQRRP</td>
+<td>29</td>
+<td>0.183%</td>
+</tr>
+<tr class="odd">
+<td>QQQRB</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>0.209%</td>
+</tr>
+<tr class="even">
+<td>QQQRN</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QQQRP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQRRR</td>
+<td>QQRRP</td>
+<td>29</td>
+<td>0.549%</td>
+</tr>
+<tr class="odd">
+<td>QQRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QQRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>QQRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>QQRBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QQRBN</td>
+<td>QRBNP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QQRBP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QQRNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QQRNP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QQRPP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>3.136%</td>
+</tr>
+<tr class="even">
+<td>QRRRR</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>QRRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QRRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>QRRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>QRRBN</td>
+<td>QRRBN</td>
+<td>25</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>QRBBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRBBN</td>
+<td>QRBBN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>QRBNN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QRNNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QRPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 21.95296167247387, and the standard deviation is 2.9962607257229648</p>
+<h4 id="point-distribution-table-2">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>0.000%</td>
+<td>3.563%</td>
+<td>96.437%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>3.563%</td>
+<td>23.833%</td>
+<td>72.605%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>27.395%</td>
+<td>30.270%</td>
+<td>42.334%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>57.666%</td>
+<td>25.366%</td>
+<td>16.969%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>83.031%</td>
+<td>7.317%</td>
+<td>9.652%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>90.348%</td>
+<td>0.000%</td>
+<td>9.652%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>90.348%</td>
+<td>9.652%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-2">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.009%</td>
+</tr>
+<tr class="even">
+<td>QQRRP</td>
+<td>29</td>
+<td>0.183%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>0.209%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQRRP</td>
+<td>29</td>
+<td>0.549%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>23</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRBNP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QRPPP</td>
+<td>17</td>
+<td>3.136%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>23</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>QRRBN</td>
+<td>25</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRRNN</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRBBN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>29</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-qb">Statistics for Flop: QB</h3>
+<h4 id="hand-statistics-table-3">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQQB</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.009%</td>
+</tr>
+<tr class="even">
+<td>QQQRB</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QQQBB</td>
+<td>QQBBP</td>
+<td>25</td>
+<td>0.183%</td>
+</tr>
+<tr class="even">
+<td>QQQBN</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QQQBP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QQRBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>QRBNP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="odd">
+<td>QQRBP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>QQBBB</td>
+<td>QQBBP</td>
+<td>25</td>
+<td>0.549%</td>
+</tr>
+<tr class="odd">
+<td>QQBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QQBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>QQBNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QQBNP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QQBPP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>3.136%</td>
+</tr>
+<tr class="even">
+<td>QRRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QRRBN</td>
+<td>QRRBN</td>
+<td>25</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>QRBBN</td>
+<td>QRBBN</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>QRBNN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QBBBB</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>QBBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QBBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>QBNNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 20.226306620209062, and the standard deviation is 3.5920456960192584</p>
+<h4 id="point-distribution-table-3">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>0.000%</td>
+<td>3.563%</td>
+<td>96.437%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>3.563%</td>
+<td>25.392%</td>
+<td>71.045%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>28.955%</td>
+<td>32.648%</td>
+<td>38.397%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>61.603%</td>
+<td>14.111%</td>
+<td>24.286%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>75.714%</td>
+<td>10.976%</td>
+<td>13.310%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>86.690%</td>
+<td>4.390%</td>
+<td>8.920%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>91.080%</td>
+<td>0.000%</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>91.080%</td>
+<td>8.920%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-3">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.009%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>25</td>
+<td>0.183%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>QQBBP</td>
+<td>25</td>
+<td>0.549%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>19</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>15</td>
+<td>3.136%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRRBB</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QRRBN</td>
+<td>25</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>QRBBN</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>29</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>19</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>21</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>19</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-qn">Statistics for Flop: QN</h3>
+<h4 id="hand-statistics-table-4">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQQN</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.009%</td>
+</tr>
+<tr class="even">
+<td>QQQRN</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QQQBN</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>0.209%</td>
+</tr>
+<tr class="even">
+<td>QQQNN</td>
+<td>QQNNP</td>
+<td>25</td>
+<td>0.183%</td>
+</tr>
+<tr class="odd">
+<td>QQQNP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QQRBN</td>
+<td>QRBNP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QQRNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>QQRNP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>QQBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QQBNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QQBNP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QQNNN</td>
+<td>QQNNP</td>
+<td>25</td>
+<td>0.549%</td>
+</tr>
+<tr class="even">
+<td>QQNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>QQNPP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>3.136%</td>
+</tr>
+<tr class="even">
+<td>QRRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRRBN</td>
+<td>QRRBN</td>
+<td>25</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>QRRNP</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBN</td>
+<td>QRBBN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>QRBNN</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>QRNNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QBBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QBNNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QNNNN</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>QNNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 20.226306620209055, and the standard deviation is 3.5920456960193055</p>
+<h4 id="point-distribution-table-4">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>0.000%</td>
+<td>3.563%</td>
+<td>96.437%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>3.563%</td>
+<td>25.392%</td>
+<td>71.045%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>28.955%</td>
+<td>32.648%</td>
+<td>38.397%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>61.603%</td>
+<td>14.111%</td>
+<td>24.286%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>75.714%</td>
+<td>10.976%</td>
+<td>13.310%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>86.690%</td>
+<td>4.390%</td>
+<td>8.920%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>91.080%</td>
+<td>0.000%</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>91.080%</td>
+<td>8.920%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-4">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.009%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>0.209%</td>
+</tr>
+<tr class="even">
+<td>QQNNP</td>
+<td>25</td>
+<td>0.183%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRBNP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QQNNP</td>
+<td>25</td>
+<td>0.549%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>3.136%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRRBN</td>
+<td>25</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>QRRNP</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>29</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>21</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>19</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-qp">Statistics for Flop: QP</h3>
+<h4 id="hand-statistics-table-5">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQQP</td>
+<td>QPPPP</td>
+<td>13</td>
+<td>0.009%</td>
+</tr>
+<tr class="even">
+<td>QQQRP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QQQBP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.209%</td>
+</tr>
+<tr class="even">
+<td>QQQNP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QQQPP</td>
+<td>QQPPP</td>
+<td>21</td>
+<td>0.392%</td>
+</tr>
+<tr class="even">
+<td>QQRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QQRBP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QQRNP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>1.672%</td>
+</tr>
+<tr class="odd">
+<td>QQRPP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>3.136%</td>
+</tr>
+<tr class="even">
+<td>QQBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QQBNP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QQBPP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>3.136%</td>
+</tr>
+<tr class="odd">
+<td>QQNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QQNPP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>3.136%</td>
+</tr>
+<tr class="odd">
+<td>QQPPP</td>
+<td>QQPPP</td>
+<td>21</td>
+<td>2.744%</td>
+</tr>
+<tr class="even">
+<td>QRRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QRPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>QBBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>QNNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>QNPPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>QPPPP</td>
+<td>QQRPP</td>
+<td>25</td>
+<td>3.963%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 19.493728222996516, and the standard deviation is 3.005939944597621</p>
+<h4 id="point-distribution-table-5">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>0.000%</td>
+<td>0.009%</td>
+<td>99.991%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>0.009%</td>
+<td>6.690%</td>
+<td>93.301%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>6.699%</td>
+<td>23.136%</td>
+<td>70.166%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>29.834%</td>
+<td>38.606%</td>
+<td>31.559%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>68.441%</td>
+<td>19.233%</td>
+<td>12.326%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>87.674%</td>
+<td>3.902%</td>
+<td>8.423%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>91.577%</td>
+<td>3.963%</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>95.540%</td>
+<td>0.000%</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>95.540%</td>
+<td>4.460%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-5">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QPPPP</td>
+<td>13</td>
+<td>0.009%</td>
+</tr>
+<tr class="even">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.209%</td>
+</tr>
+<tr class="even">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.209%</td>
+</tr>
+<tr class="odd">
+<td>QQPPP</td>
+<td>21</td>
+<td>0.392%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>1.672%</td>
+</tr>
+<tr class="odd">
+<td>QRPPP</td>
+<td>17</td>
+<td>3.136%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QBPPP</td>
+<td>15</td>
+<td>3.136%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QNPPP</td>
+<td>15</td>
+<td>3.136%</td>
+</tr>
+<tr class="odd">
+<td>QQPPP</td>
+<td>21</td>
+<td>2.744%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QQRBN</td>
+<td>29</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>QQRPP</td>
+<td>25</td>
+<td>3.963%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-rr">Statistics for Flop: RR</h3>
+<h4 id="hand-statistics-table-6">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQRR</td>
+<td>QQRRP</td>
+<td>29</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRRR</td>
+<td>QQRRP</td>
+<td>29</td>
+<td>0.314%</td>
+</tr>
+<tr class="odd">
+<td>QQRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRRR</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.523%</td>
+</tr>
+<tr class="odd">
+<td>QRRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QRRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>1.672%</td>
+</tr>
+<tr class="odd">
+<td>QRRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRRBN</td>
+<td>QRRBN</td>
+<td>25</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRRRR</td>
+<td>RRPPP</td>
+<td>13</td>
+<td>0.174%</td>
+</tr>
+<tr class="odd">
+<td>RRRRB</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>1.045%</td>
+</tr>
+<tr class="even">
+<td>RRRRN</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>1.045%</td>
+</tr>
+<tr class="odd">
+<td>RRRRP</td>
+<td>RRPPP</td>
+<td>13</td>
+<td>2.091%</td>
+</tr>
+<tr class="even">
+<td>RRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RRRBN</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>RRRBP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>RRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RRRNP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>RRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>6.272%</td>
+</tr>
+<tr class="even">
+<td>RRBBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBBN</td>
+<td>RRBBN</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRBBP</td>
+<td>RRBBP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>RRBNN</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>RRNNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRNNP</td>
+<td>RRNNP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>RRPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 18.61951219512195, and the standard deviation is 3.5750055343186276</p>
+<h4 id="point-distribution-table-6">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>0.000%</td>
+<td>2.265%</td>
+<td>97.735%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>2.265%</td>
+<td>32.195%</td>
+<td>65.540%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>34.460%</td>
+<td>20.070%</td>
+<td>45.470%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>54.530%</td>
+<td>3.902%</td>
+<td>41.568%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>58.432%</td>
+<td>20.035%</td>
+<td>21.533%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>78.467%</td>
+<td>13.101%</td>
+<td>8.432%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>91.568%</td>
+<td>8.084%</td>
+<td>0.348%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>99.652%</td>
+<td>0.000%</td>
+<td>0.348%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>99.652%</td>
+<td>0.348%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-6">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQRRP</td>
+<td>29</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRRP</td>
+<td>29</td>
+<td>0.314%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>23</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.523%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>23</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>1.672%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRRBN</td>
+<td>25</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QRRNN</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRPPP</td>
+<td>13</td>
+<td>0.174%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>1.045%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>1.045%</td>
+</tr>
+<tr class="odd">
+<td>RRPPP</td>
+<td>13</td>
+<td>2.091%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>25</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RRBNP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>RRBPP</td>
+<td>15</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>QRRNN</td>
+<td>25</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>6.272%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBBN</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRBBP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>17</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRNNP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-rb">Statistics for Flop: RB</h3>
+<h4 id="hand-statistics-table-7">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQRB</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QQRBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>0.366%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>QRBNP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQRBP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRRB</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QRRBN</td>
+<td>QRRBN</td>
+<td>25</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRBBN</td>
+<td>QRBBN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>QRBNN</td>
+<td>23</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRRRB</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>RRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>1.280%</td>
+</tr>
+<tr class="even">
+<td>RRRBN</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RRRBP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>RRBBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>1.280%</td>
+</tr>
+<tr class="odd">
+<td>RRBBN</td>
+<td>RRBBN</td>
+<td>19</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>RRBBP</td>
+<td>RRBBP</td>
+<td>17</td>
+<td>6.829%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>RRBNN</td>
+<td>19</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>RBBBB</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>RBBBN</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RBBBP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>RBBNN</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RBBPP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>RBNNN</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>RBPPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 17.590418118466896, and the standard deviation is 4.286130963993993</p>
+<h4 id="point-distribution-table-7">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>0.000%</td>
+<td>18.911%</td>
+<td>81.089%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>18.911%</td>
+<td>29.085%</td>
+<td>52.003%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>47.997%</td>
+<td>17.805%</td>
+<td>34.199%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>65.801%</td>
+<td>10.174%</td>
+<td>24.024%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>75.976%</td>
+<td>5.418%</td>
+<td>18.606%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>81.394%</td>
+<td>7.927%</td>
+<td>10.679%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>89.321%</td>
+<td>6.220%</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>95.540%</td>
+<td>0.000%</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>95.540%</td>
+<td>4.460%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-7">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>21</td>
+<td>0.366%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRRBB</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QRRBN</td>
+<td>25</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRBBN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>23</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>29</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRBPP</td>
+<td>15</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>QRRBB</td>
+<td>25</td>
+<td>1.280%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>17</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>25</td>
+<td>1.280%</td>
+</tr>
+<tr class="odd">
+<td>RRBBN</td>
+<td>19</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>RRBBP</td>
+<td>17</td>
+<td>6.829%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>19</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>17</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>RBBNP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RBBPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>RBNNP</td>
+<td>15</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>15</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-rn">Statistics for Flop: RN</h3>
+<h4 id="hand-statistics-table-8">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQRN</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QQRBN</td>
+<td>QRBNP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQRNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QQRNP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRRN</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRRBN</td>
+<td>QRRBN</td>
+<td>25</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>QRRNP</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBN</td>
+<td>QRBBN</td>
+<td>23</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>QRBNN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QRNNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRRRN</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>RRRBN</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>1.280%</td>
+</tr>
+<tr class="odd">
+<td>RRRNP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>RRBBN</td>
+<td>RRBBN</td>
+<td>19</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>RRBNN</td>
+<td>19</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RRNNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>1.280%</td>
+</tr>
+<tr class="even">
+<td>RRNNP</td>
+<td>RRNNP</td>
+<td>17</td>
+<td>6.829%</td>
+</tr>
+<tr class="odd">
+<td>RRNPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>RBBBN</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>RBBNN</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>RBNNN</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RBNNP</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RBNPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>RNNNN</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>RNNNP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RNPPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 17.590418118466896, and the standard deviation is 4.286130963994</p>
+<h4 id="point-distribution-table-8">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>0.000%</td>
+<td>18.911%</td>
+<td>81.089%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>18.911%</td>
+<td>29.085%</td>
+<td>52.003%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>47.997%</td>
+<td>17.805%</td>
+<td>34.199%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>65.801%</td>
+<td>10.174%</td>
+<td>24.024%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>75.976%</td>
+<td>5.418%</td>
+<td>18.606%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>81.394%</td>
+<td>7.927%</td>
+<td>10.679%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>89.321%</td>
+<td>6.220%</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>95.540%</td>
+<td>0.000%</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>95.540%</td>
+<td>4.460%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-8">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QRBNP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRRBN</td>
+<td>25</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>25</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>QRRNP</td>
+<td>23</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QRBBN</td>
+<td>23</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>29</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>RRBNP</td>
+<td>17</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>25</td>
+<td>1.280%</td>
+</tr>
+<tr class="odd">
+<td>RRNPP</td>
+<td>15</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>RRBBN</td>
+<td>19</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>19</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>17</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRRNN</td>
+<td>25</td>
+<td>1.280%</td>
+</tr>
+<tr class="even">
+<td>RRNNP</td>
+<td>17</td>
+<td>6.829%</td>
+</tr>
+<tr class="odd">
+<td>RRNPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>15</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>15</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RBNNP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>13</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>13</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RRNPP</td>
+<td>15</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-rp">Statistics for Flop: RP</h3>
+<h4 id="hand-statistics-table-9">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQRP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QQRBP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQRNP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQRPP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.784%</td>
+</tr>
+<tr class="even">
+<td>QRRRP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="odd">
+<td>QRPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RRRRP</td>
+<td>RRPPP</td>
+<td>13</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>RRRBP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RRRNP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>2.744%</td>
+</tr>
+<tr class="even">
+<td>RRBBP</td>
+<td>RRBBP</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>RRBNP</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RRBPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RRNNP</td>
+<td>RRNNP</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RRPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>6.402%</td>
+</tr>
+<tr class="even">
+<td>RBBBP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RBBNP</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>RBPPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>RNNNP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RNPPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RPPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>3.963%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 17.224390243902437, and the standard deviation is 3.5843004888054772</p>
+<h4 id="point-distribution-table-9">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>0.000%</td>
+<td>16.960%</td>
+<td>83.040%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>16.960%</td>
+<td>36.098%</td>
+<td>46.943%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>53.057%</td>
+<td>8.136%</td>
+<td>38.807%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>61.193%</td>
+<td>9.199%</td>
+<td>29.608%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>70.392%</td>
+<td>23.476%</td>
+<td>6.132%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>93.868%</td>
+<td>3.902%</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>97.770%</td>
+<td>0.000%</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>97.770%</td>
+<td>0.000%</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>97.770%</td>
+<td>2.230%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-9">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.784%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QRRBP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QQRBN</td>
+<td>29</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RRPPP</td>
+<td>13</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>2.744%</td>
+</tr>
+<tr class="even">
+<td>RRBBP</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>RRBNP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RRBPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RRNNP</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>6.402%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RBBNP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>13</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>13</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>3.963%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-bb">Statistics for Flop: BB</h3>
+<h4 id="hand-statistics-table-10">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQBB</td>
+<td>QQBBP</td>
+<td>25</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQBBB</td>
+<td>QQBBP</td>
+<td>25</td>
+<td>0.314%</td>
+</tr>
+<tr class="even">
+<td>QQBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBBB</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QRBBN</td>
+<td>QRBBN</td>
+<td>23</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>QBBBB</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.523%</td>
+</tr>
+<tr class="odd">
+<td>QBBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QBBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRRBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBBB</td>
+<td>QRRBB</td>
+<td>25</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RRBBN</td>
+<td>RRBBN</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RRBBP</td>
+<td>RRBBP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBBBB</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>1.045%</td>
+</tr>
+<tr class="odd">
+<td>RBBBN</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>RBBBP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>RBBNN</td>
+<td>17</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>RBBPP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>BBBBB</td>
+<td>BBPPP</td>
+<td>9</td>
+<td>0.174%</td>
+</tr>
+<tr class="odd">
+<td>BBBBN</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>1.045%</td>
+</tr>
+<tr class="even">
+<td>BBBBP</td>
+<td>BBPPP</td>
+<td>9</td>
+<td>2.091%</td>
+</tr>
+<tr class="odd">
+<td>BBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>BBBNP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>BBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>6.272%</td>
+</tr>
+<tr class="even">
+<td>BBNNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>BBNNP</td>
+<td>BBNNP</td>
+<td>13</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>BBPPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 15.752613240418118, and the standard deviation is 3.759603517196272</p>
+<h4 id="point-distribution-table-10">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>2.265%</td>
+<td>97.735%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>2.265%</td>
+<td>16.098%</td>
+<td>81.638%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>18.362%</td>
+<td>20.000%</td>
+<td>61.638%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>38.362%</td>
+<td>12.265%</td>
+<td>49.373%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>50.627%</td>
+<td>25.889%</td>
+<td>23.484%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>76.516%</td>
+<td>8.502%</td>
+<td>14.983%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>85.017%</td>
+<td>9.477%</td>
+<td>5.505%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>94.495%</td>
+<td>2.230%</td>
+<td>3.275%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>96.725%</td>
+<td>3.275%</td>
+<td>0.000%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>100.000%</td>
+<td>0.000%</td>
+<td>0.000%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>100.000%</td>
+<td>0.000%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-10">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQBBP</td>
+<td>25</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QRBBP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>25</td>
+<td>0.314%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QRBBN</td>
+<td>23</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>21</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.523%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>19</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>QRRBB</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QRRBB</td>
+<td>25</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RRBBN</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RRBBP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>1.045%</td>
+</tr>
+<tr class="odd">
+<td>RBBNP</td>
+<td>15</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>17</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>15</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>RBBPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>BBPPP</td>
+<td>9</td>
+<td>0.174%</td>
+</tr>
+<tr class="odd">
+<td>BBNPP</td>
+<td>11</td>
+<td>1.045%</td>
+</tr>
+<tr class="even">
+<td>BBPPP</td>
+<td>9</td>
+<td>2.091%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>11</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>6.272%</td>
+</tr>
+<tr class="even">
+<td>QBBNN</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>BBNNP</td>
+<td>13</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>11</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-bn">Statistics for Flop: BN</h3>
+<h4 id="hand-statistics-table-11">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQBN</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>QRBNP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>0.366%</td>
+</tr>
+<tr class="even">
+<td>QQBNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QQBNP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRBN</td>
+<td>QRRBN</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBBN</td>
+<td>QRBBN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBNN</td>
+<td>QRBNN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>QBBBN</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QBNNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRRBN</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBBN</td>
+<td>RRBBN</td>
+<td>19</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RRBNN</td>
+<td>RRBNN</td>
+<td>19</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>RRBNP</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBBBN</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>RBBNN</td>
+<td>17</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RBNNN</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RBNNP</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RBNPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>BBBBN</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>BBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>1.280%</td>
+</tr>
+<tr class="even">
+<td>BBBNP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>BBNNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>1.280%</td>
+</tr>
+<tr class="even">
+<td>BBNNP</td>
+<td>BBNNP</td>
+<td>13</td>
+<td>6.829%</td>
+</tr>
+<tr class="odd">
+<td>BBNPP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>BNNNN</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>BNNNP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>BNNPP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>BNPPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 15.86376306620209, and the standard deviation is 4.471541111964404</p>
+<h4 id="point-distribution-table-11">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>21.098%</td>
+<td>78.902%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>21.098%</td>
+<td>20.070%</td>
+<td>58.833%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>41.167%</td>
+<td>18.537%</td>
+<td>40.296%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>59.704%</td>
+<td>12.857%</td>
+<td>27.439%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>72.561%</td>
+<td>13.415%</td>
+<td>14.024%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>85.976%</td>
+<td>4.686%</td>
+<td>9.338%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>90.662%</td>
+<td>3.902%</td>
+<td>5.436%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>94.564%</td>
+<td>0.976%</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>95.540%</td>
+<td>0.000%</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>95.540%</td>
+<td>4.460%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-11">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>19</td>
+<td>0.366%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>19</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRBN</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBBN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBNN</td>
+<td>23</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QQRBN</td>
+<td>29</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>21</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBBN</td>
+<td>19</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RRBNN</td>
+<td>19</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>RRBNP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RBBNN</td>
+<td>17</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>15</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RBNNP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>11</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>21</td>
+<td>1.280%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>11</td>
+<td>2.927%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>21</td>
+<td>1.280%</td>
+</tr>
+<tr class="even">
+<td>BBNNP</td>
+<td>13</td>
+<td>6.829%</td>
+</tr>
+<tr class="odd">
+<td>BBNPP</td>
+<td>11</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>BNNPP</td>
+<td>11</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>11</td>
+<td>2.927%</td>
+</tr>
+<tr class="even">
+<td>BNNPP</td>
+<td>11</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RBNPP</td>
+<td>13</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-bp">Statistics for Flop: BP</h3>
+<h4 id="hand-statistics-table-12">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQBP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRBP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.366%</td>
+</tr>
+<tr class="even">
+<td>QQBNP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQBPP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.784%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>QRRBP</td>
+<td>23</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>QRBBP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>QBBBP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RRRBP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBBP</td>
+<td>RRBBP</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RBBBP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RBBNP</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>RBPPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>BBBBP</td>
+<td>BBPPP</td>
+<td>9</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>BBBNP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>BBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>2.744%</td>
+</tr>
+<tr class="odd">
+<td>BBNNP</td>
+<td>BBNNP</td>
+<td>13</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>BBPPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>6.402%</td>
+</tr>
+<tr class="even">
+<td>BNNNP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>BNPPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>BPPPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>3.963%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 15.49773519163763, and the standard deviation is 3.461887326327956</p>
+<h4 id="point-distribution-table-12">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.305%</td>
+<td>99.695%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.305%</td>
+<td>12.927%</td>
+<td>86.768%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>13.232%</td>
+<td>26.167%</td>
+<td>60.601%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>39.399%</td>
+<td>18.136%</td>
+<td>42.465%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>57.535%</td>
+<td>22.160%</td>
+<td>20.305%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>79.695%</td>
+<td>15.148%</td>
+<td>5.157%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>94.843%</td>
+<td>1.951%</td>
+<td>3.206%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>96.794%</td>
+<td>0.976%</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>97.770%</td>
+<td>0.000%</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>97.770%</td>
+<td>0.000%</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>97.770%</td>
+<td>2.230%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-12">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.366%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.784%</td>
+</tr>
+<tr class="even">
+<td>QRRBP</td>
+<td>23</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBBP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QQRBN</td>
+<td>29</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.732%</td>
+</tr>
+<tr class="odd">
+<td>QBBNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RRBPP</td>
+<td>15</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBBP</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>RRBNP</td>
+<td>17</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RBBNP</td>
+<td>15</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>BBPPP</td>
+<td>9</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>BBNPP</td>
+<td>11</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>2.744%</td>
+</tr>
+<tr class="odd">
+<td>BBNNP</td>
+<td>13</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>11</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>QBBPP</td>
+<td>17</td>
+<td>6.402%</td>
+</tr>
+<tr class="even">
+<td>BNNPP</td>
+<td>11</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>11</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>3.963%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-nn">Statistics for Flop: NN</h3>
+<h4 id="hand-statistics-table-13">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQNN</td>
+<td>QQNNP</td>
+<td>25</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQBNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQNNN</td>
+<td>QQNNP</td>
+<td>25</td>
+<td>0.314%</td>
+</tr>
+<tr class="odd">
+<td>QQNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>QRBNN</td>
+<td>23</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRNNN</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>QBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QBNNN</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QNNNN</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.523%</td>
+</tr>
+<tr class="even">
+<td>QNNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>RRRNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>RRBNN</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRNNN</td>
+<td>QRRNN</td>
+<td>25</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RRNNP</td>
+<td>RRNNP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBBNN</td>
+<td>RBBNN</td>
+<td>17</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RBNNN</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>RBNNP</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>RNNNN</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>1.045%</td>
+</tr>
+<tr class="even">
+<td>RNNNP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>BBBNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>BBNNN</td>
+<td>QBBNN</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>BBNNP</td>
+<td>BBNNP</td>
+<td>13</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>BNNNN</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>1.045%</td>
+</tr>
+<tr class="even">
+<td>BNNNP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>NNNNN</td>
+<td>NNPPP</td>
+<td>9</td>
+<td>0.174%</td>
+</tr>
+<tr class="odd">
+<td>NNNNP</td>
+<td>NNPPP</td>
+<td>9</td>
+<td>2.091%</td>
+</tr>
+<tr class="even">
+<td>NNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>6.272%</td>
+</tr>
+<tr class="odd">
+<td>NNPPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 15.752613240418118, and the standard deviation is 3.7596035171962794</p>
+<h4 id="point-distribution-table-13">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>2.265%</td>
+<td>97.735%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>2.265%</td>
+<td>16.098%</td>
+<td>81.638%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>18.362%</td>
+<td>20.000%</td>
+<td>61.638%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>38.362%</td>
+<td>12.265%</td>
+<td>49.373%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>50.627%</td>
+<td>25.889%</td>
+<td>23.484%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>76.516%</td>
+<td>8.502%</td>
+<td>14.983%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>85.017%</td>
+<td>9.477%</td>
+<td>5.505%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>94.495%</td>
+<td>2.230%</td>
+<td>3.275%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>96.725%</td>
+<td>3.275%</td>
+<td>0.000%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>100.000%</td>
+<td>0.000%</td>
+<td>0.000%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>100.000%</td>
+<td>0.000%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-13">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQNNP</td>
+<td>25</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQNNP</td>
+<td>25</td>
+<td>0.314%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.836%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>25</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBNN</td>
+<td>23</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>1.672%</td>
+</tr>
+<tr class="odd">
+<td>QRNNP</td>
+<td>21</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>QBBNN</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>1.672%</td>
+</tr>
+<tr class="even">
+<td>QBNNP</td>
+<td>19</td>
+<td>4.460%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.523%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>3.345%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>25</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBNN</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QRRNN</td>
+<td>25</td>
+<td>1.463%</td>
+</tr>
+<tr class="odd">
+<td>RRNNP</td>
+<td>17</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBBNN</td>
+<td>17</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>15</td>
+<td>3.345%</td>
+</tr>
+<tr class="even">
+<td>RBNNP</td>
+<td>15</td>
+<td>8.920%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>13</td>
+<td>1.045%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>13</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>QBBNN</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QBBNN</td>
+<td>21</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>BBNNP</td>
+<td>13</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>11</td>
+<td>1.045%</td>
+</tr>
+<tr class="even">
+<td>BNNPP</td>
+<td>11</td>
+<td>6.690%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>11</td>
+<td>8.362%</td>
+</tr>
+<tr class="even">
+<td>NNPPP</td>
+<td>9</td>
+<td>0.174%</td>
+</tr>
+<tr class="odd">
+<td>NNPPP</td>
+<td>9</td>
+<td>2.091%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>6.272%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>4.878%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-np">Statistics for Flop: NP</h3>
+<h4 id="hand-statistics-table-14">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQNP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRNP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQBNP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QQNPP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.784%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>QRRNP</td>
+<td>23</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBNP</td>
+<td>QQRBN</td>
+<td>29</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>QRNNP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>QBBNP</td>
+<td>19</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>QBNNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="odd">
+<td>QNNNP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RRRNP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBNP</td>
+<td>RRBNP</td>
+<td>17</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRNNP</td>
+<td>RRNNP</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>RRNPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>RBBNP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>RBNNP</td>
+<td>15</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>RNNNP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RNPPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>BBBNP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>BBNNP</td>
+<td>BBNNP</td>
+<td>13</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>BNNNP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>BNNPP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>BNPPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>NNNNP</td>
+<td>NNPPP</td>
+<td>9</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>NNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>2.744%</td>
+</tr>
+<tr class="even">
+<td>NNPPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>6.402%</td>
+</tr>
+<tr class="odd">
+<td>NPPPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>3.963%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 15.49773519163763, and the standard deviation is 3.46188732632796</p>
+<h4 id="point-distribution-table-14">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.305%</td>
+<td>99.695%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.305%</td>
+<td>12.927%</td>
+<td>86.768%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>13.232%</td>
+<td>26.167%</td>
+<td>60.601%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>39.399%</td>
+<td>18.136%</td>
+<td>42.465%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>57.535%</td>
+<td>22.160%</td>
+<td>20.305%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>79.695%</td>
+<td>15.148%</td>
+<td>5.157%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>94.843%</td>
+<td>1.951%</td>
+<td>3.206%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>96.794%</td>
+<td>0.976%</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>97.770%</td>
+<td>0.000%</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>97.770%</td>
+<td>0.000%</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>97.770%</td>
+<td>2.230%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-14">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.366%</td>
+</tr>
+<tr class="odd">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.784%</td>
+</tr>
+<tr class="even">
+<td>QRRNP</td>
+<td>23</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QQRBN</td>
+<td>29</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRNNP</td>
+<td>21</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>4.181%</td>
+</tr>
+<tr class="even">
+<td>QBBNP</td>
+<td>19</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QBNNP</td>
+<td>19</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QBNPP</td>
+<td>17</td>
+<td>4.181%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBNP</td>
+<td>17</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRNNP</td>
+<td>17</td>
+<td>1.707%</td>
+</tr>
+<tr class="odd">
+<td>RRNPP</td>
+<td>15</td>
+<td>3.659%</td>
+</tr>
+<tr class="even">
+<td>RBBNP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RBNNP</td>
+<td>15</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>13</td>
+<td>8.362%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>13</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>RNNPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RRNPP</td>
+<td>15</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>11</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>BBNNP</td>
+<td>13</td>
+<td>1.707%</td>
+</tr>
+<tr class="even">
+<td>BBNPP</td>
+<td>11</td>
+<td>3.659%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>11</td>
+<td>1.463%</td>
+</tr>
+<tr class="even">
+<td>BNNPP</td>
+<td>11</td>
+<td>7.317%</td>
+</tr>
+<tr class="odd">
+<td>RBNPP</td>
+<td>13</td>
+<td>7.317%</td>
+</tr>
+<tr class="even">
+<td>NNPPP</td>
+<td>9</td>
+<td>0.305%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>2.744%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>6.402%</td>
+</tr>
+<tr class="odd">
+<td>QRNPP</td>
+<td>19</td>
+<td>3.963%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="statistics-for-flop-pp">Statistics for Flop: PP</h3>
+<h4 id="hand-statistics-table-15">Hand Statistics Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Hand</th>
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQQPP</td>
+<td>QQPPP</td>
+<td>21</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QQRPP</td>
+<td>QRPPP</td>
+<td>17</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQBPP</td>
+<td>QBPPP</td>
+<td>15</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QQNPP</td>
+<td>QNPPP</td>
+<td>15</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQPPP</td>
+<td>QQPPP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>QRPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>QBNPP</td>
+<td>17</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QBPPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QNPPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QPPPP</td>
+<td>QQRPP</td>
+<td>25</td>
+<td>3.171%</td>
+</tr>
+<tr class="even">
+<td>RRRPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RRPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>RBBPP</td>
+<td>13</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RBNPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>RBPPP</td>
+<td>RRBPP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>RNNPP</td>
+<td>13</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RNPPP</td>
+<td>RRNPP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RPPPP</td>
+<td>QRRPP</td>
+<td>21</td>
+<td>6.341%</td>
+</tr>
+<tr class="even">
+<td>BBBPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>BBNPP</td>
+<td>BBNPP</td>
+<td>11</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>BBPPP</td>
+<td>QBBPP</td>
+<td>17</td>
+<td>3.415%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>BNNPP</td>
+<td>11</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>BNPPP</td>
+<td>RBNPP</td>
+<td>13</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>BPPPP</td>
+<td>QRBPP</td>
+<td>19</td>
+<td>6.341%</td>
+</tr>
+<tr class="even">
+<td>NNNPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>NNPPP</td>
+<td>QNNPP</td>
+<td>17</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>NPPPP</td>
+<td>QRNPP</td>
+<td>19</td>
+<td>6.341%</td>
+</tr>
+<tr class="odd">
+<td>PPPPP</td>
+<td>QQRPP</td>
+<td>25</td>
+<td>3.171%</td>
+</tr>
+</tbody>
+</table>
+<p>The average score is 17.354006968641112, and the standard deviation is 3.504120467510025</p>
+<h4 id="point-distribution-table-15">Point distribution Table</h4>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Prob. Less than</th>
+<th>Prob Equal</th>
+<th>Prob Greater Than</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>9</td>
+<td>0.000%</td>
+<td>0.000%</td>
+<td>100.000%</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>0.000%</td>
+<td>3.902%</td>
+<td>96.098%</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>3.902%</td>
+<td>16.167%</td>
+<td>79.930%</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>20.070%</td>
+<td>20.348%</td>
+<td>59.582%</td>
+</tr>
+<tr class="odd">
+<td>17</td>
+<td>40.418%</td>
+<td>12.404%</td>
+<td>47.178%</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>52.822%</td>
+<td>24.948%</td>
+<td>22.230%</td>
+</tr>
+<tr class="odd">
+<td>21</td>
+<td>77.770%</td>
+<td>15.889%</td>
+<td>6.341%</td>
+</tr>
+<tr class="even">
+<td>23</td>
+<td>93.659%</td>
+<td>0.000%</td>
+<td>6.341%</td>
+</tr>
+<tr class="odd">
+<td>25</td>
+<td>93.659%</td>
+<td>6.341%</td>
+<td>0.000%</td>
+</tr>
+<tr class="even">
+<td>27</td>
+<td>100.000%</td>
+<td>0.000%</td>
+<td>0.000%</td>
+</tr>
+<tr class="odd">
+<td>29</td>
+<td>100.000%</td>
+<td>0.000%</td>
+<td>0.000%</td>
+</tr>
+</tbody>
+</table>
+<h4 id="piece-set-table-15">Piece Set table</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Piece Set</th>
+<th>Points</th>
+<th>Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>QQPPP</td>
+<td>21</td>
+<td>0.035%</td>
+</tr>
+<tr class="even">
+<td>QRPPP</td>
+<td>17</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QBPPP</td>
+<td>15</td>
+<td>0.418%</td>
+</tr>
+<tr class="even">
+<td>QNPPP</td>
+<td>15</td>
+<td>0.418%</td>
+</tr>
+<tr class="odd">
+<td>QQPPP</td>
+<td>21</td>
+<td>0.732%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>2.230%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>3.902%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.976%</td>
+</tr>
+<tr class="odd">
+<td>QBNPP</td>
+<td>17</td>
+<td>2.230%</td>
+</tr>
+<tr class="even">
+<td>QRBPP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.976%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>3.902%</td>
+</tr>
+<tr class="odd">
+<td>QQRPP</td>
+<td>25</td>
+<td>3.171%</td>
+</tr>
+<tr class="even">
+<td>QRRPP</td>
+<td>21</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>RRBPP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>RBBPP</td>
+<td>13</td>
+<td>1.951%</td>
+</tr>
+<tr class="odd">
+<td>RBNPP</td>
+<td>13</td>
+<td>4.460%</td>
+</tr>
+<tr class="even">
+<td>RRBPP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>RNNPP</td>
+<td>13</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RRNPP</td>
+<td>15</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRRPP</td>
+<td>21</td>
+<td>6.341%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>BBNPP</td>
+<td>11</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>QBBPP</td>
+<td>17</td>
+<td>3.415%</td>
+</tr>
+<tr class="odd">
+<td>BNNPP</td>
+<td>11</td>
+<td>1.951%</td>
+</tr>
+<tr class="even">
+<td>RBNPP</td>
+<td>13</td>
+<td>7.805%</td>
+</tr>
+<tr class="odd">
+<td>QRBPP</td>
+<td>19</td>
+<td>6.341%</td>
+</tr>
+<tr class="even">
+<td>QNNPP</td>
+<td>17</td>
+<td>0.488%</td>
+</tr>
+<tr class="odd">
+<td>QNNPP</td>
+<td>17</td>
+<td>3.415%</td>
+</tr>
+<tr class="even">
+<td>QRNPP</td>
+<td>19</td>
+<td>6.341%</td>
+</tr>
+<tr class="odd">
+<td>QQRPP</td>
+<td>25</td>
+<td>3.171%</td>
+</tr>
+</tbody>
+</table>
+<p>(base) 20:05:04 analysis-of-choker #=#</p>
+</body>
+</html>

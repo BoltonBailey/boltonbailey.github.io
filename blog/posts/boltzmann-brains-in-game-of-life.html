@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Boltzmann Brains in Game of Life</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Boltzmann Brains in Game of Life</h1>
+<p class="date">2021-01-11T09:36:45-08:00</p>
+</header>
+<p>What would happen if you randomly initialized an infinite grid of Conway’s Game of Life and let it run? At step 0, each cell would have a 0.5 chance of being alive or dead. After a single step, there is a <span class="math inline">\(0.5 \cdot \frac{\binom{8}{3}}{2^8} + 0.5 \frac{\binom{8}{3} + \binom{8}{2}}{2^8} = 35/128 \approx 0.27\)</span> chance of any given cell being alive. One can compute the chance of a cell being alive after <span class="math inline">\(n\)</span> steps by running life on all possible <span class="math inline">\(2n+1\)</span> by <span class="math inline">\(2n+1\)</span> possible starting grids centered on that cell. This is a <span class="math inline">\(\Theta(2^{2n} n^3)\)</span>-time algorithm, though it might be possible to improve the running time through optimizations.</p>
+<h2 id="monte-carlo">Monte Carlo</h2>
+<p>You can approximate the probability for higher <span class="math inline">\(n\)</span> by running simulations. Here is a plot of the number of live cells in a 1000x1000 square in a simulation I ran.</p>
+<figure>
+<img src="./img/gameoflifelivecellsplot.png" alt="Game of Life live cell frequency" /><figcaption>Game of Life live cell frequency</figcaption>
+</figure>
+<p>From the plot above, it seems that the probability converges to a constant somewhere less than 8%. Indeed, if you just look at simulations of random life grids, the activity in most parts of the grid settles down to a still life after a few dozen iterations. If I were to put more computational resources into the simulation, I would expect to see convergence to a sequence roughly close to some constant, maybe with a small periodic components indicating the frequency of certain blinkers. Given this, you might think some fact like the following is true:</p>
+<p><strong>Conjecture</strong> The probability of a cell being alive after <span class="math inline">\(n\)</span> generations for <span class="math inline">\(n \ge 1000\)</span> is $0.7 0.01.</p>
+<p>However, there are questions related to emergent behavior that complicate this issue.</p>
+<h2 id="intelligent-life">Intelligent Life</h2>
+<p>It has been shown (<a href="https://www.nicolasloizeau.com/gol-computer">here</a> for example) that one can create a Turing complete computer in Game of Life. According to LifeWiki, <a href="https://www.conwaylife.com/wiki/8-bit_programmable_computer">the Loizeau pattern</a> is contained within a 311,607 x 303,995-cell bounding box, and it seems to be able to run programs with 32 instructions and 8 registers.</p>
+<p>Presumably there is not too much overhead to adding a message passing system between adjacent instantiations of this pattern. Estimating conservatively, I would expect it to be possible to create a supercomputer with an Exabyte of storage in a <span class="math inline">\(10^{15}\)</span> by <span class="math inline">\(10^{15}\)</span> bounding box. Since a clock cycle in the basic computer is 1,600,000 generations, I would expect the supercomputer to have a clock cycle of under <span class="math inline">\(2 \cdot 10^{21}\)</span></p>
+<p>According to the initial distribution, you would expect to find one of these supercomputers every <span class="math inline">\(2^{10^{30}}\)</span> cells of area you searched.</p>
+<p>Of course if such a computer did happen to arise purely by chance, it would likely be quickly destroyed by surrounding chaos. To mitigate this, we could surround the computer with many cells of empty space, but it still might be possible for gliders to enter and disrupt the computer.</p>
+<p>Imagine, though, that the supercomputer executes a superintelligent AI which is endowed with knowledge of the rules of the game of life. The supercomputer also hooks up to gadgets along its perimeter that allow the AI to fire gliders in various directions at times of its choosing.</p>
+<p>Might the AI be able to use the glider guns to construct defenses against incoming particles?</p>
+<p>Might the AI be able to detect and intentionally destroy glider gun patterns that aim in its direction?</p>
+<p>If the AI’s values wanted it, might the AI even be able to systematically clear the area surrounding it of all still life patterns, bringing the live cell density in its vicinity to near zero? Might it be able to intentionally fill the vicinity with high density still life, or even expand it’s own brain by constructing more computer modules?</p>
+<h2 id="agi-dominance">AGI Dominance</h2>
+<p>Let’s assume that the answer to all of these questions is “Yes”.</p>
+<p>What should we expect the character of the virtual life forms that eventually dominate the grid? I would expect the largest organisms to be AGIs. This is because it takes extremely long time scales for these beings to spread throughout the universe: Due to the sheer improbability of any computer coming into existence at a particular locale, we expect them to start out very far apart. Since information in GoL can only travel at “the speed of light” of one cell per timestep, the amount of volume taken up by an organism depends greatly on how fast it learns to clear space around it. This, in turn, depends on the agent’s capability to use its compute capabilities to do research on a number of subjects, including:</p>
+<ul>
+<li>Basic physics research about how its actuators respond to its sensors. Presumably given enough thought, an AGI can work out the rules of GoL, and see that they are the simplest laws that are consistent with their observations. It can then use these laws to do other research.</li>
+<li>Research on building improved computer hardware. Once the AGI knows the rules, it can hopefully think of ways of constructing more computers. This accelerates other forms of research.</li>
+<li>Research on expansion technology, including the distribution of certain forms of background radiation and matter, and ways of building actuators to clear it.</li>
+</ul>
+<p>This last type of research (taking some inspiration from <a href="https://grabbyaliens.com/">“Grabby Aliens”</a>) is the ultimate determinant of how fast an agent spreads, and thus, how much territory it has claimed by the time it encounters other agents.</p>
+<ul>
+<li>A last type of research is research on warfare. Some AIs may not be self-improving, but may be capable of defending themselves. It is therefore beneficial to learn how to destroy these agents, or at the very least isolate them.</li>
+</ul>
+<p>Presumably there is some optimal “frontier structure” which takes the form of a curved area of some width. One side of the line is the expansion side and one side is the command and control side. The C&amp;C side can tell the structure to move forward as fast as it can, filling the territory it claims with computronium under the commander’s control. When two frontiers controlled by different commanders meet, they form a battle front. If both sides have designed their frontier stucture naerly optimally, we expect the frontier to be relatively stationary, but it might wiggle stochastically a bit.</p>
+<p>Presumably the minds on each side would receive or be able to infer information about how the fight was going at the front. It might even be the case that competing commanders could send messages across no man’s land in the form of specific sequences of attacks or retreats. If both sides were equipped to send and try to interpret messages from the other, perhaps they could agree to a truce. Even more interesting is the possibility that they could jointly create a new AI.</p>
+<h2 id="child-creation">Child Creation</h2>
+<p>The child AI construction could go like this: The mother AI would create a very tightly-packed computronium core containing a pre-loaded program and cryptographic key (call this “the Egg”). The Egg would be given no natural defenses, and no ability to reorganize itself, but it would have sensors designed to detect malicious intrusion and destroy the key if found. The mother would retreat, leaving the Egg undefended. The father would then surround the egg, measuring its size, and subjecting it to a series of computational tests. The purpose of these tests would be to ensure that the Egg was indeed made of pure computronium, by the logic that no configuration of that size other than computronium would be able to pass the tests. The father would then send program instructions to be written to a “Write-once” module in the Egg (since we’re going for a biological metaphor here, we might call the program instruction “the Sperm”). The father can include his own key in this payload. With the Egg has been “inseminated”, the father retreats. The mother now surrounds the Egg again, reads the program memory to ensure the father input the agreed-upon instructions. She also queries the cryptographic key for a signature. The signature is to ensure the father did not erase and rebuild the egg - if he had tried to do so, the intrusion-detection in the egg would have destroyed the key. If the mother sees that the egg is not her own, she treats it as malicious and goes to war with it. If the father was honest though, the mother now attaches frontier structures to the I/O system of the egg so that it can start acting for itself. Whenever the egg needs to authenticate itself to its mother or father, it can just use its cryptographic keys.</p>
+<p>A child might be a mutually beneficial construct, even for parents who were engaged in a border conflict. It could be programmed as a hypervisor that runs the core AI of both parents as subsystems and expands outward, claiming territory from its two creators. It would be designed so that if it received resistance from one parent, the other would be given full control over the child, as a way of incentivizing cooperation. This would be appealing to risk-averse AIs, since it would reduce the risk that they get unlucky in the long term and lose all their territory and die. This way, their larger child would live on running their code, and would perhaps be more likely to survive by virtue of economies of scale on size.</p>
+<p>One could imagine AI parents who were risk-neutral or even risk-positive. Such agents would be unhappy with the prospect of the child AI’s OS overhead eating into their compute. They might program their children to eventually randomly choose one subsystem to delete, so that the other subsystem could emerge and delete the hypervisor.</p>
+</body>
+</html>

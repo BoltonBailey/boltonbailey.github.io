@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bolton Bailey</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+  <style type="text/css">
+    /* body {
+    <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
+            font-family: 'Rokkitt', serif;
+              font-size: 150%;
+      } */
+
+    .purple {
+      color: rgb(124, 25, 124);
+    }
+
+    .purple a:hover {
+      color: rgb(124, 25, 124);
+      background-color: rgb(203, 153, 203);
+      text-decoration: underline;
+    }
+
+    .purple a:visited {
+      color: rgb(70, 29, 70);
+      text-decoration: underline;
+    }
+
+    .purple a {
+      color: rgb(203, 153, 203);
+      text-decoration: underline;
+    }
+
+    .blue {
+      color: rgb(22, 56, 101);
+    }
+
+    .blue a:hover {
+      color: rgb(22, 56, 101);
+      background-color: rgb(108, 149, 203);
+      text-decoration: underline;
+    }
+
+    .blue a:visited {
+      color: rgb(30, 39, 52);
+      text-decoration: underline;
+    }
+
+    .blue a {
+      color: rgb(62, 96, 141);
+      text-decoration: underline;
+    }
+
+    .red {
+      color: rgb(100, 31, 34);
+    }
+
+    .red a:hover {
+      color: rgb(100, 31, 34);
+      background-color: rgb(151, 85, 87);
+      text-decoration: underline;
+    }
+
+    .red a:visited {
+      color: rgb(60, 22, 23);
+      text-decoration: underline;
+    }
+
+    .red a {
+      color: rgb(191, 71, 75);
+      text-decoration: underline;
+    }
+
+    .orange {
+      color: rgb(147, 94, 15);
+    }
+
+    .orange a:hover {
+      color: rgb(147, 94, 15);
+      background-color: rgb(213, 171, 108);
+      text-decoration: underline;
+    }
+
+    .orange a:visited {
+      color: rgb(94, 69, 30);
+      text-decoration: underline;
+    }
+
+    .orange a {
+      color: rgb(208, 147, 57);
+      text-decoration: underline;
+    }
+
+    #page_wrapper {
+      width: 100%;
+      max-width: 1024px;
+      margin: 0 auto;
+    }
+    
+    body {
+      margin-bottom: 60px;
+    }
+    
+    header {
+        background-color: #fff;
+    }
+    
+    nav {
+        height: 48px;
+    }
+    
+    nav ul {
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        list-style-type: none;
+    }
+    nav li a {
+        color: purple;
+        font-size: 16px;
+        text-decoration: none;
+        
+    }
+    
+    nav li a:hover {
+        color: #dd5771;
+    }
+  </style>
+</head>
+<!--<body class="font-serif">-->
+<!--<body class="bg-yellow-lighter">-->
+
+<body class="bg-grey-lighter">
+
+  <div class="mx-auto px-2 min-h-screen min-h-full w-full md:w-3/4 lg:w-1/2 xl:w-1/2 bg-white shadow-md">
+
+    <header>
+    <div id="page_wrapper">
+    <nav>
+    <ul>
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./publications.html">Publications</a></li>
+        <li><a href="./teachingmentoring.html">Teaching and Mentoring</a></li>
+        <li><a href="./CV.pdf">CV</a></li>
+    </ul>
+    </nav>
+    </div>
+    </header>
+
+
+    <div class="flex purple text-xl">
+      <div class="w-64 h-auto border-b-2 border-black pt-8 px-2  font-bold">
+        Welcome to my website
+      </div>
+    </div>
+
+    <div class="flex purple">
+      <div class="flex-no-shrink w-4 h-auto border-r-2 border-black"></div>
+
+      <div class="w-auto h-auto border-l-8 border-purple-lighter pl-3 py-1 ">
+
+        <img src="boltonbailey.JPG" alt="Imagine a picture of me" width="250" height="300" float="left">
+
+        <p class="border-l-4 border-purple-light pl-2 my-2">My name is <a href="mailto:boltonb2@illinois.edu">Bolton
+            Bailey</a>.</p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2">I am a seventh-year Ph.D. student at <a
+            href="https://cs.illinois.edu/">UIUC</a>.
+          I was previously advised by the venerable <a href="http://mjt.web.engr.illinois.edu/">Matus Telgarsky</a> (from whom I stole this website layout). 
+          Now I'm part of <a href="http://soc1024.ece.illinois.edu/">Andrew Miller's</a> <a href="https://decentralize.ece.illinois.edu/">Decentralized Systems Lab</a>.</p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2">I prove things and write code. My main interest is in formal verification for cryptography. My other interests include: <a href="https://arxiv.org/pdf/2204.12806.pdf">Quantum Cryptography</a>, wrapping things in Recursive SNARKs, and Cryptoeconomics.</p>
+      </div>
+    </div>
+
+    <div class="flex orange text-xl">
+      <div class="w-64 h-auto border-b-2 border-black pt-8 px-2  font-bold">
+        Selected Work
+      </div>
+    </div>
+
+    <div class="flex orange">
+      <div class="flex-no-shrink w-4 h-auto border-r-2 border-black"></div>
+        <div class="w-auto h-auto border-l-8 border-indigo-lighter pl-3 py-1 ">
+          <p class="border-l-4 border-indigo-light pl-2 my-2">
+            <strong>51% Attack via Difficulty Increase with a Small Quantum Miner </strong> (Myself and <a href="https://orsattath.wordpress.com/about/">Or Sattath</a>)
+              (<a href="https://arxiv.org/abs/2403.08023">arXiv</a>) 
+          </p>  
+          <p class="border-l-4 border-indigo-light pl-2 my-2">
+            <strong>Formalizing Soundness Proofs of SNARKs </strong> (Myself and  <a href="http://soc1024.ece.illinois.edu/">Andrew Miller</a>)
+              (<a href="https://github.com/BoltonBailey/formal_baby_snark">code</a>) 
+              (<a href="https://www.youtube.com/watch?v=YcWQMBNJbdM">video</a>) 
+          </p>          
+          <p class="border-l-4 border-indigo-light pl-2 my-2">
+            <strong>General Partially Fair Multi-Party Computation with VDFs </strong> (Myself,  <a href="http://soc1024.ece.illinois.edu/">Andrew Miller</a>, and <a href="https://orsattath.wordpress.com/about/">Or Sattath</a>)
+              (<a href="https://eprint.iacr.org/2022/1318">ePrint</a>) 
+          </p>          
+          <p class="border-l-4 border-indigo-light pl-2 my-2">
+            <strong>Merkle Trees Optimized for Stateless Clients in Bitcoin</strong> (Myself and  <a href="https://www.linkedin.com/in/surya-sankagiri/">Surya Sankagiri</a>)
+              <a href="http://proceedings.mlr.press/v97/chen19h.html">WTSC '21</a>.
+              (<a href="https://eprint.iacr.org/2021/340">ePrint</a>)
+              (<a href="https://www.youtube.com/watch?v=HEKtDILPeaI">video</a>) 
+          </p>
+          <p class="border-l-4 border-indigo-light pl-2 my-2">
+            <strong>A Gradual, Semi-Discrete Approach to Generative Network Training via Explicit Wasserstein
+              Minimization</strong> (<a href="https://www.ideals.illinois.edu/bitstream/handle/2142/104932/CHEN-THESIS-2019.pdf?sequence=1&isAllowed=y">Yucheng Chen</a>, <a href="http://mjt.web.engr.illinois.edu/">Matus Telgarsky</a>, <a href="http://chaozhang.org/">Chao Zhang</a>, Myself, <a href="https://www.cs.columbia.edu/~djhsu/">Daniel Hsu</a>, <a href="https://jianpeng.web.engr.illinois.edu/">Jian Peng</a>)
+            <a href="http://proceedings.mlr.press/v97/chen19h.html">ICML 2019</a>.
+            (<a href="https://arxiv.org/abs/1906.03471">arXiv</a>)
+          </p>
+          <p class="border-l-4 border-indigo-light pl-2 my-2">
+            <strong>Size-Noise Tradeoffs in Generative Networks</strong> (Myself and <a href="http://mjt.web.engr.illinois.edu/">Matus Telgarsky</a>) <a
+              href="https://nips.cc/Conferences/2018/Schedule?showEvent=12564">NeurIPS 2018 Spotlight</a>.
+            (<a href="https://arxiv.org/abs/1810.11158">arXiv</a>)
+            (<a
+              href="https://neurips.cc/media/Slides/nips/2018/220cd(04-10-05)-04-10-25-12564-Size-Noise_Trad.pdf">slides</a>)
+            (<a href="https://www.videoken.com/embed/1FsBeeO_5hY?tocitem=19">video</a>)
+          </p>
+          <p> See also: <a href="https://scholar.google.com/citations?user=peGyOTwAAAAJ&hl=en">My Google Scholar profile.</a> </p>
+        </div>
+    </div>
+
+
+    <div class="flex blue text-xl">
+      <div class="w-64 h-auto border-b-2 border-black pt-8 px-2  font-bold">
+        Timeline
+      </div>
+    </div>
+
+    <div class="flex blue">
+      <div class="flex-no-shrink w-4 h-auto border-r-2 border-black"></div>
+      <div class="w-auto h-auto border-l-8 border-indigo-lighter pl-3 py-1 ">
+        <p class="border-l-4 border-indigo-light pl-2 my-2">
+          During the Summer and Fall of 2022, I was a Software Engineer at <a href="https://www.risczero.com/">RISC Zero</a>, where I worked on a formalization of their <a href="https://github.com/risc0/risc0">zkVM for RISC-V</a>.
+        </p>
+        <p class="border-l-4 border-indigo-light pl-2 my-2">
+          I have a longstanding project on <a href="https://github.com/BoltonBailey/formal_baby_snark">formalizing SNARKS</a> using the <a href="https://github.com/leanprover-community/mathlib">Lean mathlib</a>.
+        </p>
+        <p class="border-l-4 border-indigo-light pl-2 my-2">
+          During Summer and Fall of 2020 my collaborator Surya and I worked on a <a href="https://github.com/surya-sankagiri/utreexo">network-efficient accumulator for Bitcoin</a>. Our work was accepted at <a href="https://fc21.ifca.ai/wtsc/">WTSC '21</a>. 
+        </p>
+        <p class="border-l-4 border-indigo-light pl-2 my-2">
+          During Fall of 2019, I took Prof. David Forsyth's <strong><a
+              href="http://luthuli.cs.uiuc.edu/~daf/courses/MAAV-2019/598-2019-home.html">course on
+              autonomous vehicles</a></strong>. Part of my project for the class was a lidar-based particle filter for
+          tracking the location of a Gem e2 autonomous car. I made a GIF of it which you can see below.
+          <img src="movie_pfilter.gif" alt="Imagine a picture of me" width="250" height="300" float="left">
+        </p>
+        <p class="border-l-4 border-indigo-light pl-2 my-2">
+          During Summer of 2019, I was a visit the <strong><a href="https://simons.berkeley.edu/programs/dl2019">Simons
+              Institute</a></strong>. I presented in the Robustness reading group on <a
+            href="presentation.pdf">poisoning</a>. I also worked on some problems, but I <a href="rnnproblem.html">was not able to solve them</a>.
+        </p>
+        <p class="border-l-4 border-indigo-light pl-2 my-2">
+          In 2019, I received a <strong>NSF Graduate Research Fellowship</strong>.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex red text-xl">
+      <div class="w-64 h-auto border-b-2 border-black pt-8 px-2  font-bold">
+        Teaching Assistantships
+      </div>
+    </div>
+
+    <div class="flex red">
+      <div class="flex-no-shrink w-4 h-auto border-r-2 border-black"></div>
+      <div class="w-auto h-auto border-l-8 border-red-lighter pl-3 py-1 ">
+        <p class="border-l-4 border-red-light pl-2 my-2">
+          Most recently, I am a TA for <a href="https://courses.grainger.illinois.edu/cs598dh/sp2024/">David Heath's CS 598 course on Secure Computation</a>. Previously, I was a TA for the <a href="https://courses.engr.illinois.edu/ece543/sp2019/">spring 2019 Statistical Learning Theory (ECE 543)</a> class.
+        </p>
+        <p class="border-l-4 border-red-light pl-2 my-2">
+          <p class="border-l-4 border-red-light pl-2 my-2">
+            <a href="./teachingmentoring.html">Read more about my pedagogy here</a>
+          </p>
+        </p>
+      </div>
+    </div>
+    <br>
+    <div>Last updated March 2024</div>
+
+  </div>
+
+</body>
+
+</html>

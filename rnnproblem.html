@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A question about RNNs</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css" rel="stylesheet">
+  <style type="text/css">
+    /* body {
+    <link href="https://fonts.googleapis.com/css?family=Rokkitt" rel="stylesheet">
+            font-family: 'Rokkitt', serif;
+              font-size: 150%;
+      } */
+
+      .purple {
+        color: rgb(124, 25, 124);
+      }
+  
+      .purple a:hover {
+        color: rgb(124, 25, 124);
+        background-color: rgb(203, 153, 203);
+        text-decoration: underline;
+      }
+  
+      .purple a:visited {
+        color: rgb(70, 29, 70);
+        text-decoration: underline;
+      }
+  
+      .purple a {
+        color: rgb(203, 153, 203);
+        text-decoration: underline;
+      }
+  
+      .blue {
+        color: rgb(22, 56, 101);
+      }
+  
+      .blue a:hover {
+        color: rgb(22, 56, 101);
+        background-color: rgb(108, 149, 203);
+        text-decoration: underline;
+      }
+  
+      .blue a:visited {
+        color: rgb(30, 39, 52);
+        text-decoration: underline;
+      }
+  
+      .blue a {
+        color: rgb(62, 96, 141);
+        text-decoration: underline;
+      }
+  
+      .red {
+        color: rgb(100, 31, 34);
+      }
+  
+      .red a:hover {
+        color: rgb(100, 31, 34);
+        background-color: rgb(151, 85, 87);
+        text-decoration: underline;
+      }
+  
+      .red a:visited {
+        color: rgb(60, 22, 23);
+        text-decoration: underline;
+      }
+  
+      .red a {
+        color: rgb(191, 71, 75);
+        text-decoration: underline;
+      }
+  
+      .orange {
+        color: rgb(147, 94, 15);
+      }
+  
+      .orange a:hover {
+        color: rgb(147, 94, 15);
+        background-color: rgb(213, 171, 108);
+        text-decoration: underline;
+      }
+  
+      .orange a:visited {
+        color: rgb(94, 69, 30);
+        text-decoration: underline;
+      }
+  
+      .orange a {
+        color: rgb(208, 147, 57);
+        text-decoration: underline;
+      }
+  </style>
+  <script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<!--<body class="font-serif">-->
+<!--<body class="bg-yellow-lighter">-->
+
+<body class="bg-grey-lighter">
+
+  <div class="mx-auto px-2 min-h-screen min-h-full w-full md:w-3/4 lg:w-1/2 xl:w-1/2 bg-white shadow-md">
+
+
+
+    <div class="flex purple text-xl">
+      <div class="w-64 h-auto border-b-2 border-black pt-8 px-2  font-bold">
+        A Problem about RNNs
+      </div>
+    </div>
+
+    <div class="flex purple">
+      <div class="flex-no-shrink w-4 h-auto border-r-2 border-black"></div>
+
+      <div class="w-auto h-auto border-l-8 border-purple-lighter pl-3 py-1 ">
+
+        <p class="border-l-4 border-purple-light pl-2 my-2"> 
+            I want to write here about a problem I became interested in after meeting <a href="https://hanin.princeton.edu/">Boris Hanin</a> at the <a href="https://simons.berkeley.edu/programs/dl2019">Simons Institute Foundations of Deep Learning program</a> a few summers ago. I talked briefly with Boris about his work on the number of <a href="http://proceedings.mlr.press/v97/hanin19a/hanin19a.pdf">affine pieces of random neural networks</a>.
+        </p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2"> 
+            Boris's work showed that the number of affine pieces in a vanilla feedforward ReLU network was limited. I began to wonder if this was true for RNNs as well. It seems like RNNs have recursive computation that makes their outputs more complicated. They can even compute very weird functions like the devil's staircase if the weights are set carefully. 
+
+            I ended up with the question: Is there some input data you can feed a ReLU RNN so that it has a chance of learning an infinite-affine-piece function?
+        </p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2"> 
+          Here is the conjecture I had, in formal language, and my thoughts:
+        </p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2"> 
+          Define a \(k\)-depth \(w\)-width 1-hidden-layer ReLU RNN, parametrized by the weight \(W \in \mathbb{R}^{w \times w}\), to be the function
+          $$ f_k(W, x) = (\text{ReLU} \circ W \circ \cdots \circ \text{ReLU} \circ W)(x)_1 $$
+          With \(k\) applications of \(W\). The subscript 1 denotes that the output of the network is the first component of the output layer vector.
+        </p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2"> 
+
+          <b>Conjecture</b>: There exists some finite data set \(\{(X_i, y_i)\}_{i=1}^n\) such that, if \(W\) is initialized with standard normal values, and the network is trained by gradient flow on the squared loss, then the expected number of affine pieces in the trained network is exponential in \(k\).
+        </p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2"> 
+          <b>Proof attempt (wrong)</b>. Consider <a href="https://en.wikipedia.org/wiki/Cantor_function">the devil's staircase function</a>. Note there is a choice of parameters \(W^*\) so that \(f_k\) computes the \(k\)th function in the devil's staircase iteration. Choose \(n >> w^2\) datapoints \((x, y)\) that exist in the limiting DS function, not on any of its discontinuities. Consider the loss landscape in the vicinity of \(W^*\). The landscape is smooth here - since we are not on a discontinuity the loss is a polynomial in the elements of \(W\) - and the loss has a minimum at \(W^*\). Furthermore, since there are more data points than parameters, presumably the losses associated with each of these data points mean all but a rank \(w^2-1\) subspace intersecting \(W^*\) has nonzero loss. We make sure that the data points are chosen such that the intersection of all of these subspaces is rank 0 on a sufficiently small neighborhood of \(W^*\).
+        </p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2"> 
+          There are obviously a few holes in this proof. The rank \(w^2-1\) zero loss subspaces for each datapoint are presumably curved, so these individual point losses are not convex, and I don't know if or how to show their sum is convex. Furthermore, some of the parameters may not affect the loss on any datapoint in the vicinity of \(W^*\), since they may only control the widths of the steps rather than their height or slope, so the zero loss subspaces for all datapoints may intersect on a line. Trying to move the datapoints to the corners of the staircase function opens up a host of new problems, such as pathological behavior in the loss gradient.
+        </p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2"> 
+          Does the devil's staircase work, or is a piecewise affine approximations of a quadratic function better? The function \(x \mapsto x(1-x)\) has the representation [see Yarotsky's 2016 paper].
+          $$ \frac14 t_1(x) + \frac{1}{16} t_2(x) + \frac{1}{64} t_4(x) + \dots $$
+          where \(t_i\) is the triangle wave with \(i\) cycles on \([0,1]\).
+        </p>
+
+        <p class="border-l-4 border-purple-light pl-2 my-2"> 
+          When I was studying this problem two years ago, I remember thinking a good candidate function would be.
+          $$ \frac14 t_1(x) + \frac{1}{32} t_2(x) + \frac{1}{128} t_4(x) + \dots $$
+          Because (I think) this would admit a \(W\) with functional norm \(< 1\), which was important somehow.
+
+      </p>
+
+      <p class="border-l-4 border-purple-light pl-2 my-2"> 
+        Anyway, I have stopped doing research on the theory of deep learning, so it is unlikely I will ever solve this problem. If you ever manage to prove this conjecture, or disprove it, <a href="mailto:boltonb2@illinois.edu">I would be happy to hear about it</a>!
+
+    </p>
+      </div>
+    </div>
+
+
+
+
+  </div>
+
+</body>
+
+</html>
