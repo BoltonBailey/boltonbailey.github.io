@@ -1,0 +1,7 @@
+{
+    "search.useIgnoreFiles": false,
+    "ltex.dictionary": {},
+    "github.copilot.enable": {
+        "markdown": true
+    }
+}
