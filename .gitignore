@@ -1,2 +1,5 @@
 source/*
 **/.DS_Store
+**/data/**
+**/img/**
+**/non-public/**
